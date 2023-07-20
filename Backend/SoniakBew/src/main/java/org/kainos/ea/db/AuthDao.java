@@ -65,6 +65,19 @@ public class AuthDao extends DatabaseConnector {
     public int registerUser(Login login) throws SQLException {
         Connection conn = getConnection();
 
-        String inserStatement = "INSERT INTO user (username, password, roleId) " +
-                "VALUES (?, ?, 2)";    }
+        String insertStatement = "INSERT INTO user (username, password, roleId) " +
+                "VALUES (?, ?, 2)";
+
+        PreparedStatement statement = conn.prepareStatement(insertStatement, Statement.RETURN_GENERATED_KEYS);
+        statement.setString(1, login.getUsername());
+        statement.setString(2, login.getPassword());
+
+        statement.executeUpdate();
+        ResultSet result = statement.getGeneratedKeys();
+
+        if (result.next()) {
+            return result.getInt(1);
+        }
+        return -1;
+    }
 }
