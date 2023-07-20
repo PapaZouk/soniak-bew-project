@@ -38,7 +38,7 @@ app.listen(3000, () => {
 })
 
 app.get('/', (req: Request, res: Response) => {
-    res.render('pizza', { title: 'Martyna\'s Pizza Time!' })
+    res.render('index', { title: 'Soniak Bew' })
 })
 
-//require('./controller/*')(app);
+require('./controller/deliveryEmployeeController')(app);
