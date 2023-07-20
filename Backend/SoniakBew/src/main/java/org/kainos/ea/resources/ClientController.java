@@ -55,7 +55,8 @@ public class ClientController {
                     message = "Successfully retrieve all clients from the database",
                     response = Client.class
             ),
-            @ApiResponse(code = 404, message = "Failed to retrieve all clients from the database"),
+            @ApiResponse(code = 400, message = "Failed to retrieve all clients from the database"),
+            @ApiResponse(code = 403, message = "User has no authorities to access resources"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")})
 
     public Response getAllClients(@QueryParam("token") String token) {
@@ -85,7 +86,8 @@ public class ClientController {
                     message = "Successfully retrieve client with max project`s value from the database",
                     response = RequestClientWithMaxValue.class
             ),
-            @ApiResponse(code = 404, message = "Failed to retrieve data from the database"),
+            @ApiResponse(code = 400, message = "Failed to retrieve data from the database"),
+            @ApiResponse(code = 403, message = "User has no authorities to access resources"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")})
 
     public Response getClientWithMaxValue(@QueryParam("token") String token) {
