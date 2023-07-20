@@ -1,10 +1,10 @@
 export class Project {
   productId?: number;
-  techLeadId?: number;
+  tech_lead_id?: number;
   clientId?: number;
   name?: string;
   value?: number;
-  status: string;
-  startDate: Date;
-  endDate: Date;
+  status?: string;
+  start_date?: Date;
+  endDate?: Date;
 }

@@ -16,12 +16,12 @@ module.exports = function (app: Application) {
     } catch (error) {
       console.error(error);
       res.locals.errormessage = error.message;
-      res.render("login", req.body);
+      res.render("auth/login", req.body);
     }
   });
 
   app.get("/register", async (req: Request, res: Response) => {
-    res.render("register");
+    res.render("auth/register");
   });
 
   app.post("/register", async (req: Request, res: Response) => {
@@ -29,11 +29,10 @@ module.exports = function (app: Application) {
 
     try {
       await authService.register(data);
-      res.redirect("/login");
+      res.redirect("auth/login");
     } catch (error) {
-      console.error(error);
       res.locals.errormessage = error.message;
-      res.render("register", req.body);
+      res.render("auth/register", req.body);
     }
   });
 };
