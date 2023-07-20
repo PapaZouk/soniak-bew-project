@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.checkerframework.checker.units.qual.A;
 import org.kainos.ea.api.AuthService;
 import org.kainos.ea.api.ProjectService;
 import org.kainos.ea.cli.Project;
@@ -62,8 +63,10 @@ public class ProjectController {
             @ApiResponse(code = 500, message = "Failed to connect with the database")})
     public Response getProjectById(@PathParam("id") int id, @QueryParam("token") String token) {
         try {
-            if (!authService.isManager(token) & !authService.isAdmin(token)) {
-                throw new FailedToVerifyTokenException();
+            if (AuthSwitch.isTokenNeeded) {
+                if (!authService.isManager(token) & !authService.isAdmin(token)) {
+                    throw new FailedToVerifyTokenException();
+                }
             }
             return Response.ok(projectService.getProjectById(id)).build();
         } catch (ProjectDoesNotExistException e) {
@@ -81,8 +84,10 @@ public class ProjectController {
     @ApiOperation(value = "Updates project status by the given ID number", tags = MANAGEMENT_TAG)
     public Response updateProjectStatusAsCompleted(@PathParam("id") int id, @QueryParam("token") String token) {
         try {
-            if (!authService.isManager(token) & !authService.isAdmin(token)) {
-                throw new FailedToVerifyTokenException();
+            if (AuthSwitch.isTokenNeeded) {
+                if (!authService.isManager(token) & !authService.isAdmin(token)) {
+                    throw new FailedToVerifyTokenException();
+                }
             }
             projectService.setProjectStatusAsCompletedByProjectId(id);
             return Response.ok().build();
@@ -105,8 +110,10 @@ public class ProjectController {
     @ApiOperation(value = "Create new project", tags = MANAGEMENT_TAG)
     public Response createNewProject(ProjectRequest projectRequest, @QueryParam("token") String token) {
         try {
-            if (!authService.isManager(token) & !authService.isAdmin(token)) {
-                throw new FailedToVerifyTokenException();
+            if (AuthSwitch.isTokenNeeded) {
+                if (!authService.isManager(token) & !authService.isAdmin(token)) {
+                    throw new FailedToVerifyTokenException();
+                }
             }
             projectService.createNewProject(projectRequest);
             return Response.ok().build();
