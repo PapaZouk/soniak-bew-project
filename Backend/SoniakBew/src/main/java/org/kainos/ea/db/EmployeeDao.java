@@ -34,7 +34,6 @@ public class EmployeeDao extends DatabaseConnector {
 
             employeeList.add(employee);
         }
-
         return employeeList;
     }
 

@@ -41,7 +41,8 @@ public class AuthDao extends DatabaseConnector {
         ResultSet result = statement.executeQuery();
 
         while (result.next()) {
-            return result.getString("password").equals(login.getPassword());
+            String password = result.getString("password");
+            return password.equals(login.getPassword());
         }
         return false;
     }
