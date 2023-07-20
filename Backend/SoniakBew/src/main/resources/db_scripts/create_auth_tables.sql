@@ -6,7 +6,7 @@ BEGIN
 
      CREATE TABLE role
      (
-        roleId				TINYINT				NOT NULL,
+         roleId				TINYINT				NOT NULL,
          name				VARCHAR(64)			NOT NULL,
          PRIMARY KEY (roleId)
      );
@@ -16,11 +16,11 @@ BEGIN
 
      CREATE TABLE user
      (
-        username			VARCHAR(64)			NOT NULL,
+         username			VARCHAR(64)			NOT NULL,
          password			VARCHAR(64)			NOT NULL,
          roleId				TINYINT				NOT NULL,
          PRIMARY KEY (username),
-        FOREIGN KEY (roleId) REFERENCES role (roleId)
+         FOREIGN KEY (roleId) REFERENCES role (roleId)
      );
 
      INSERT INTO user (username, password, roleID) VALUES ('admin', 'admin', 1);
