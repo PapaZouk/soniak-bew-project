@@ -17,7 +17,7 @@ public class AuthDao extends DatabaseConnector {
 
         Connection conn = getConnection();
 
-        String query = "INSERT INTO Token (Username, Token, Expiry) " +
+        String query = "INSERT INTO token (username, token, expiry) " +
                 "VALUES (?, ?, ?)";
 
         PreparedStatement statement = conn.prepareStatement(query);
