@@ -11,19 +11,20 @@ public class EmployeeDao extends DatabaseConnector {
 
     public List<DeliveryEmployee> getAllDeliveryEmployees() throws SQLException {
         Connection c = getConnection();
-        Statement st = c.createStatement();
 
-        String query = "SELECT em.first_name, em.last_name, em.salary, em.bank_account_number, em.national_insurance_number " +
+        String query = "SELECT em.id AS 'employeeId', em.first_name, em.last_name, em.salary, em.bank_account_number, em.national_insurance_number " +
                 "FROM employee AS em " +
                 "LEFT JOIN job AS j ON j.id = em.job_id " +
                 "WHERE j.title = 'Deliveryman'";
 
+        Statement st = c.createStatement();
         ResultSet rs = st.executeQuery(query);
 
         List<DeliveryEmployee> employeeList = new ArrayList<>();
 
         while (rs.next()) {
             DeliveryEmployee employee = DeliveryEmployee.builder()
+                    .employeeId(rs.getInt("employeeId"))
                     .firstName(rs.getString("first_name"))
                     .lastName(rs.getString("last_name"))
                     .salary(rs.getBigDecimal("salary"))
@@ -54,6 +55,7 @@ public class EmployeeDao extends DatabaseConnector {
 
         while (rs.next()) {
             return DeliveryEmployee.builder()
+                    .employeeId(rs.getInt("id"))
                     .firstName(rs.getString("first_name"))
                     .lastName(rs.getString("last_name"))
                     .salary(rs.getBigDecimal("salary"))
@@ -94,7 +96,7 @@ public class EmployeeDao extends DatabaseConnector {
         Connection c = getConnection();
         Statement st = c.createStatement();
 
-        String query = "SELECT em.first_name, em.last_name, em.salary, em.bank_account_number, " +
+        String query = "SELECT em.id, em.first_name, em.last_name, em.salary, em.bank_account_number, " +
                 "em.national_insurance_number, em.commission_rate " +
                 "FROM employee AS em " +
                 "LEFT JOIN job AS j ON j.id = em.job_id " +
@@ -106,6 +108,7 @@ public class EmployeeDao extends DatabaseConnector {
 
         while (rs.next()) {
             SalesEmployee employee = SalesEmployee.builder()
+                    .employeeId(rs.getInt("id"))
                     .firstName(rs.getString("first_name"))
                     .lastName(rs.getString("last_name"))
                     .salary(rs.getBigDecimal("salary"))
@@ -136,6 +139,7 @@ public class EmployeeDao extends DatabaseConnector {
 
         while (rs.next()) {
             return SalesEmployee.builder()
+                    .employeeId(rs.getInt("id"))
                     .firstName(rs.getString("first_name"))
                     .lastName(rs.getString("last_name"))
                     .salary(rs.getBigDecimal("salary"))
