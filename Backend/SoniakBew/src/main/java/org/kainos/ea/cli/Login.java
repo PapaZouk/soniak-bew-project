@@ -12,11 +12,14 @@ import lombok.Setter;
 public class Login {
     private String username;
     private String password;
+    private int roleId;
 
     @JsonCreator
     public Login(
             @JsonProperty("username") String username,
-            @JsonProperty("password") String password) {
+            @JsonProperty("password") String password,
+            @JsonProperty("roleId") int roleId
+    ) {
         this.username = username;
         this.password = password;
     }

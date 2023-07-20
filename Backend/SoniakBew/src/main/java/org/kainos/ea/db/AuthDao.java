@@ -68,11 +68,14 @@ public class AuthDao extends DatabaseConnector {
         Connection conn = getConnection();
 
         String insertStatement = "INSERT INTO user (username, password, roleId) " +
-                "VALUES (?, ?, 2)";
+                "VALUES (?, ?, ?)";
+
+        int roleId = login.getRoleId() == 0 ? 3: login.getRoleId();
 
         PreparedStatement statement = conn.prepareStatement(insertStatement, Statement.RETURN_GENERATED_KEYS);
         statement.setString(1, login.getUsername());
         statement.setString(2, login.getPassword());
+        statement.setInt(3, roleId);
 
         statement.executeUpdate();
         ResultSet result = statement.getGeneratedKeys();
