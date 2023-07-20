@@ -27,15 +27,28 @@ public class AuthService {
 
     public boolean isAdmin(String token) throws TokenExpiredException, FailedToVerifyTokenException {
         try {
-            int roleID=authDao.getRoleIDFromToken(token);
+            int roleID = authDao.getRoleIDFromToken(token);
             if (roleID == 1) {
-                return true;
 
-            } }
-        catch (SQLException e) {
+                return true;
+            }
+        } catch (SQLException e) {
             throw new FailedToVerifyTokenException();
         }
         return false;
     }
 
+    public boolean isUser(String token) throws TokenExpiredException, FailedToVerifyTokenException {
+        try {
+            int roleID = authDao.getRoleIDFromToken(token);
+            if (roleID == 2) {
+
+                return true;
+            }
+        } catch (SQLException e) {
+            throw new FailedToVerifyTokenException();
+        }
+        return false;
+    }
 }
+

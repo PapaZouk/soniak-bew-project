@@ -2,6 +2,7 @@ package org.kainos.ea.db;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.kainos.ea.cli.Login;
+import org.kainos.ea.client.TokenExpiredException;
 
 import java.sql.*;
 import java.util.Date;
