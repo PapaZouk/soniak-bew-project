@@ -43,6 +43,7 @@ public class ClientController {
 
     public Response getAllClients(@QueryParam("token") String token) {
         try {
+
             if (!authService.isSales(token) & !authService.isAdmin(token)) {
                 throw new FailedToVerifyTokenException();
             }
