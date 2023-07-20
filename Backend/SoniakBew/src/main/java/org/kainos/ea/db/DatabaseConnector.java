@@ -13,7 +13,7 @@ public class DatabaseConnector {
     public Connection getConnection() throws SQLException {
         String user, password, host, name;
 
-        if (connection != null) {
+        if (connection != null && !connection.isClosed()) {
             return connection;
         }
 
