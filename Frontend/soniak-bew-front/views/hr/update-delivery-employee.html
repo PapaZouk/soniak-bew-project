@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Add Delivery Employee</title>
+        <title>Update Delivery Employee {{ deliveryEmployee.employeeId }}</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     </head>
     <body>
@@ -10,7 +10,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
-                        <h1>Add Delivery Employee</h1>
+                        <h1>Update Delivery Employee</h1>
                     </div>
                 </div>
             </div>
@@ -18,35 +18,39 @@
         <main class="container mt-4">
             <section id="form" class="bg-light py-5">
                 <div class="container">
-                    <p>Enter Delivery Employee details</p>
+                    <p>Update Delivery Employee details</p>
                     {% if errormessage %}
                         <div class="alert alert-danger" role="alert">
                             {{ errormessage }}
                         </div>
                     {% endif %}
-                    <form action="/add-delivery-employee" method="post">
+                    {% if deliveryEmployee %}
+                    <form action="/update-delivery-employee" method="post">
                         <div class="form-group">
                             <label for="firstName">First Name</label>
-                            <input type="text" id="firstName" name="firstName" class="form-group" value="{{ firstName }}" required>
+                            <input type="text" id="firstName" name="firstName" class="form-group" value="{{ deliveryEmployee.firstName }}" required>
                         </div>
                         <div class="form-group">
                             <label for="lastName">Last Name</label>
-                            <input type="text" id="lastName" name="lastName" class="form-group" value="{{ lastName }}" required>
+                            <input type="text" id="lastName" name="lastName" class="form-group" value="{{ deliveryEmployee.lastName }}" required>
                         </div>
                         <div class="form-group">
                             <label for="salary">Salary</label>
-                            <input type="number" min="0" step="any" id="salary" name="salary" class="form-group" value="{{ salary }}" required>
+                            <input type="number" min="0" step="any" id="salary" name="salary" class="form-group" value="{{ deliveryEmployee.salary }}" required>
                         </div>
                         <div class="form-group">
                             <label for="bankAccount">Bank Account</label>
-                            <input type="text" id="bankAccount" name="bankAccount" class="form-group" value="{{ bankAccount }}" required>
+                            <input type="text" id="bankAccount" name="bankAccount" class="form-group" value="{{ deliveryEmployee.bankAccount }}" required>
                         </div>
                         <div class="form-group">
                             <label for="nationalInsuranceNumber">National Insurance Number</label>
-                            <input type="text" id="nationalInsuranceNumber" name="nationalInsuranceNumber" class="form-group" value="{{ nationalInsuranceNumber }}" required>
+                            <input type="text" id="nationalInsuranceNumber" name="nationalInsuranceNumber" class="form-group" value="{{ deliveryEmployee.nationalInsuranceNumber }}" required>
                         </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
+                {% else %}
+                    Could not find Delivery Employee.
+                {% endif %}
                 </div>
             </section>
         </main>

@@ -9,19 +9,16 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class Login {
+public class LoginNoRole {
     private String username;
     private String password;
-    private int roleId;
 
     @JsonCreator
-    public Login(
+    public LoginNoRole(
             @JsonProperty("username") String username,
-            @JsonProperty("password") String password,
-            @JsonProperty("roleId") int roleId
+            @JsonProperty("password") String password
     ) {
         this.username = username;
         this.password = password;
-        this.roleId = roleId;
     }
 }
