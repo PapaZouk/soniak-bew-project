@@ -41,3 +41,13 @@ module.exports.deleteDeliveryEmployee = async function (id: number): Promise<Del
         throw new Error('Could not delete Delivery Employee')
     }
 }
+
+module.exports.updateDeliveryEmployee = async function (id: number, deliveryEmployee: DeliveryEmployee): Promise<DeliveryEmployee> {
+    try {
+        const response = await axios.update('http://localhost:8080/employees/deliveryman/' +  id  + '/update', deliveryEmployee)
+
+        return response.data
+    } catch (e) {
+        throw new Error('Could not update Delivery Employee')
+    }
+}
