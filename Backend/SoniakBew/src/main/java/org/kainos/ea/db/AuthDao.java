@@ -3,10 +3,7 @@ package org.kainos.ea.db;
 import org.apache.commons.lang3.time.DateUtils;
 import org.kainos.ea.cli.Login;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.Date;
 import java.util.UUID;
 
@@ -30,6 +27,22 @@ public class AuthDao extends DatabaseConnector {
         statement.executeUpdate();
 
         return token;
+    }
+
+    public boolean validLogin(Login login) throws SQLException {
+        Connection conn = getConnection();
+
+        String query = "SELECT us.password FROM user AS us WHERE us.username = ?";
+
+        PreparedStatement statement = conn.prepareStatement(query);
+        statement.setString(1, login.getUsername());
+
+        ResultSet result = statement.executeQuery();
+
+        while (result.next()) {
+            return result.getString("password").equals(login.getPassword());
+        }
+        return false;
     }
 
 }
