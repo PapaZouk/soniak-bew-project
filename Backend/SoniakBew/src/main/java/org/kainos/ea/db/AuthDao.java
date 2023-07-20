@@ -70,7 +70,7 @@ public class AuthDao extends DatabaseConnector {
         String insertStatement = "INSERT INTO user (username, password, roleId) " +
                 "VALUES (?, ?, ?)";
 
-        int roleId = login.getRoleId() == 0 ? 3: login.getRoleId();
+        int roleId = login.getRoleId() == 0 ? 3 : login.getRoleId();
 
         PreparedStatement statement = conn.prepareStatement(insertStatement, Statement.RETURN_GENERATED_KEYS);
         statement.setString(1, login.getUsername());

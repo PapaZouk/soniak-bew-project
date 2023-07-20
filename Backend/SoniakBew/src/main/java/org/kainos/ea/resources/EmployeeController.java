@@ -44,10 +44,8 @@ public class EmployeeController {
     public Response getAllDeliveryEmployees(@QueryParam("token") String token) {
         try {
             if (AuthSwitch.isTokenNeeded) {
-                if (AuthSwitch.isTokenNeeded) {
-                    if (!authService.isHr(token) & !authService.isAdmin(token)) {
-                        throw new FailedToVerifyTokenException();
-                    }
+                if (!authService.isHr(token) & !authService.isAdmin(token)) {
+                    throw new FailedToVerifyTokenException();
                 }
             }
             return Response.ok(employeeService.getAllDeliveryEmployees()).build();
@@ -89,7 +87,7 @@ public class EmployeeController {
     }
 
     @GET
-    @Path(EMPLOYEES + DELIVERYMAN + ID)
+    @Path(EMPLOYEES + DELIVERYMAN +ID)
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Retrieve deliveryman employee by the given ID number", tags = HR_TEAM_TAG)
     @ApiResponses(value = {
