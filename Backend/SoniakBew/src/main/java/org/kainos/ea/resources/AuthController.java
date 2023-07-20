@@ -20,6 +20,20 @@ import static org.kainos.ea.resources.AuthController.*;
 
 @Api
 @Path(API)
+@SwaggerDefinition(
+        info = @Info(
+                title = "Soniak Bew API",
+                version = "1.0.0",
+                license = @License(name = "Kainos.com", url = "https://www.kainos.com/"),
+                contact = @Contact(
+                        name = "Martyna Świerszcz, Oleksandr Gneushev, Rafał Papała, Paweł Skóra",
+                        url = "https://github.com/PapaZouk/soniak-bew-project.git",
+                        email = "martyna.swierszcz@kainos.com, oleksandr.gneushev@kainos.com," +
+                                " rafal.papala@kainos.com, pawel.skora@kainos.com"),
+                description = "Soniak Bew API that provides access for Management Team, HR Team and Sales Team " +
+                        "necessary endpoints for each department to have access to required data. To provide fully " +
+                        "secure environment, each user should successfully log in to the service and use provided " +
+                        "token to access available endpoint."))
 public class AuthController {
     public static final String API = "/api";
     private static final String AUTHORIZATION = "Authorization Panel";

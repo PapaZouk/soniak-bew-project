@@ -1,9 +1,6 @@
 package org.kainos.ea.resources;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import org.checkerframework.checker.units.qual.A;
 import org.kainos.ea.api.AuthService;
 import org.kainos.ea.api.ProjectService;
@@ -18,6 +15,20 @@ import java.util.List;
 
 @Api
 @Path("/")
+@SwaggerDefinition(
+        info = @Info(
+                title = "Soniak Bew API",
+                version = "1.0.0",
+                license = @License(name = "Kainos.com", url = "https://www.kainos.com/"),
+                contact = @Contact(
+                        name = "Martyna Świerszcz, Oleksandr Gneushev, Rafał Papała, Paweł Skóra",
+                        url = "https://github.com/PapaZouk/soniak-bew-project.git",
+                        email = "martyna.swierszcz@kainos.com, oleksandr.gneushev@kainos.com," +
+                                " rafal.papala@kainos.com, pawel.skora@kainos.com"),
+                description = "Soniak Bew API that provides access for Management Team, HR Team and Sales Team " +
+                        "necessary endpoints for each department to have access to required data. To provide fully " +
+                        "secure environment, each user should successfully log in to the service and use provided " +
+                        "token to access available endpoint."))
 public class ProjectController {
     private final ProjectService projectService = new ProjectService();
     private static final String MANAGEMENT_TAG = "Management Team";
@@ -31,10 +42,13 @@ public class ProjectController {
     @GET
     @Path(PROJECTS)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Retrieve list of deliveryman employees", tags = MANAGEMENT_TAG)
+    @ApiOperation(
+            value = "Retrieve list of deliveryman employees",
+            tags = MANAGEMENT_TAG,
+            responseContainer = "List")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieve all projects from " +
-                    "the database"),
+                    "the database", response = ProjectRequest.class),
             @ApiResponse(code = 404, message = "Failed to retrieve all projects from the database"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")})
 
@@ -59,10 +73,17 @@ public class ProjectController {
     @ApiOperation(value = "Retrieve project by the given ID number", tags = MANAGEMENT_TAG)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieve project by ID from " +
-                    "the database"),
+                    "the database", response = ProjectRequest.class),
             @ApiResponse(code = 404, message = "Failed to retrieve project from the database"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")})
-    public Response getProjectById(@PathParam("id") int id, @QueryParam("token") String token) {
+    public Response getProjectById(
+            @ApiParam(
+                    value = "ID of the project that you are looking for",
+                    type = MediaType.TEXT_PLAIN,
+                    example = "1",
+                    required = true
+            ) @PathParam("id") int id,
+            @QueryParam("token") String token) {
         try {
             if (AuthSwitch.isTokenNeeded) {
                 if (!authService.isManager(token) & !authService.isAdmin(token)) {
@@ -83,7 +104,15 @@ public class ProjectController {
     @Path(PROJECTS + PROJECT_ID + UPDATE_STATUS)
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Updates project status by the given ID number", tags = MANAGEMENT_TAG)
-    public Response updateProjectStatusAsCompleted(@PathParam("id") int id, @QueryParam("token") String token) {
+    public Response updateProjectStatusAsCompleted(
+            @ApiParam(
+                    value = "ID of the project that will be updated",
+                    type = MediaType.TEXT_PLAIN,
+                    example = "1",
+                    required = true
+            ) @PathParam("id") int id,
+            @QueryParam("token") String token
+    ) {
         try {
             if (AuthSwitch.isTokenNeeded) {
                 if (!authService.isManager(token) & !authService.isAdmin(token)) {
@@ -109,7 +138,14 @@ public class ProjectController {
     @Path(PROJECTS + CREATE)
     @Consumes(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Create new project", tags = MANAGEMENT_TAG)
-    public Response createNewProject(ProjectRequest projectRequest, @QueryParam("token") String token) {
+    public Response createNewProject(
+            @ApiParam(
+                    value = "Data details for new project",
+                    type = MediaType.APPLICATION_JSON,
+                    required = true
+            ) ProjectRequest projectRequest,
+            @QueryParam("token") String token
+    ) {
         try {
             if (AuthSwitch.isTokenNeeded) {
                 if (!authService.isManager(token) & !authService.isAdmin(token)) {

@@ -2,6 +2,7 @@ package org.kainos.ea.cli;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Builder
+@ApiModel(value = "Deliveryman employee")
 public class DeliveryEmployee {
     private int employeeId;
     private String firstName;

@@ -1,9 +1,7 @@
 package org.kainos.ea.resources;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
+import io.swagger.models.auth.In;
 import org.kainos.ea.api.AuthService;
 import org.kainos.ea.api.EmployeeService;
 import org.kainos.ea.cli.DeliveryEmployee;
@@ -14,10 +12,25 @@ import org.kainos.ea.client.FailedToCreateNewSalesEmployeeException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 
 @Api
 @Path("/")
+@SwaggerDefinition(
+        info = @Info(
+                title = "Soniak Bew API",
+                version = "1.0.0",
+                license = @License(name = "Kainos.com", url = "https://www.kainos.com/"),
+                contact = @Contact(
+                        name = "Martyna Świerszcz, Oleksandr Gneushev, Rafał Papała, Paweł Skóra",
+                        url = "https://github.com/PapaZouk/soniak-bew-project.git",
+                        email = "martyna.swierszcz@kainos.com, oleksandr.gneushev@kainos.com," +
+                                " rafal.papala@kainos.com, pawel.skora@kainos.com"),
+                description = "Soniak Bew API that provides access for Management Team, HR Team and Sales Team " +
+                        "necessary endpoints for each department to have access to required data. To provide fully " +
+                        "secure environment, each user should successfully log in to the service and use provided " +
+                        "token to access available endpoint."))
 public class EmployeeController {
     private static final String HR_TEAM_TAG = "HR Team";
     private static final String EMPLOYEES = "employees";
@@ -35,9 +48,13 @@ public class EmployeeController {
     @GET
     @Path(EMPLOYEES + DELIVERYMAN)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Retrieve list of deliveryman employees", tags = HR_TEAM_TAG)
+    @ApiOperation(
+            value = "Retrieve list of deliveryman employees",
+            tags = HR_TEAM_TAG,
+            responseContainer = "List")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully retrieve all delivery employees from the database"),
+            @ApiResponse(code = 200, message = "Successfully retrieve all delivery employees from the database",
+                    response = DeliveryEmployee.class),
             @ApiResponse(code = 404, message = "Failed to retrieve all delivery employees from the database"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")
     })
@@ -61,14 +78,20 @@ public class EmployeeController {
     @POST
     @Path(EMPLOYEES + DELIVERYMAN + CREATE)
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiModelProperty(dataType = MediaType.APPLICATION_JSON, required = true)
     @ApiOperation(value = "Creates new delivery employee", tags = HR_TEAM_TAG)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully added new delivery employee to the database"),
             @ApiResponse(code = 400, message = "Failed to add new delivery employee to the database"),
+            @ApiResponse(code = 403, message = "Unauthorized access while creating new deliveryman"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")
     })
     public Response createNewDeliveryman(
-            DeliveryEmployee deliveryEmployee,
+            @ApiParam(
+                    value = "Deliveryman details",
+                    required = true,
+                    type = MediaType.APPLICATION_JSON
+            ) DeliveryEmployee deliveryEmployee,
             @QueryParam("token") String token) {
         try {
             if (AuthSwitch.isTokenNeeded) {
@@ -87,16 +110,24 @@ public class EmployeeController {
     }
 
     @GET
-    @Path(EMPLOYEES + DELIVERYMAN +ID)
+    @Path(EMPLOYEES + DELIVERYMAN + ID)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Retrieve deliveryman employee by the given ID number", tags = HR_TEAM_TAG)
+    @ApiOperation(
+            value = "Retrieve deliveryman employee by the given ID number",
+            tags = HR_TEAM_TAG,
+            response = DeliveryEmployee.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully retrieved delivery employee by the given ID number"),
+            @ApiResponse(code = 200, message = "Successfully retrieved delivery employee by the given ID number",
+                    response = DeliveryEmployee.class),
             @ApiResponse(code = 404, message = "Failed to retrieve delivery employee by the given ID number"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")
     })
     public Response deliverymanById(
-            @PathParam("id") int id,
+            @ApiParam(
+                    value = "ID of deliveryman that you are looking for",
+                    required = true,
+                    example = "1"
+            ) @PathParam("id") int id,
             @QueryParam("token") String token
     ) {
         try {
@@ -126,7 +157,11 @@ public class EmployeeController {
             @ApiResponse(code = 500, message = "Failed to connect with the database")
     })
     public Response deleteDeliverymanById(
-            @PathParam("id") int id,
+            @ApiParam(
+                    value = "ID of employee that will be deleted",
+                    example = "1",
+                    type = MediaType.TEXT_PLAIN
+            ) @PathParam("id") int id,
             @QueryParam("token") String token
     ) {
         try {
@@ -159,8 +194,17 @@ public class EmployeeController {
             @ApiResponse(code = 500, message = "Failed to connect with the database")
     })
     public Response updateDeliverymanById(
-            @PathParam("id") int id,
-            DeliveryEmployee deliveryEmployee,
+            @ApiParam(
+                    value = "ID of employee that will be updated",
+                    example = "1",
+                    type = MediaType.TEXT_PLAIN,
+                    required = true
+            ) @PathParam("id") int id,
+            @ApiParam(
+                    value = "Deliveryman data",
+                    type = MediaType.APPLICATION_JSON,
+                    required = true
+            ) DeliveryEmployee deliveryEmployee,
             @QueryParam("token") String token
     ) {
         try {
@@ -186,9 +230,13 @@ public class EmployeeController {
     @GET
     @Path(EMPLOYEES + SALESMAN)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Retrieve list of salesman employees", tags = HR_TEAM_TAG)
+    @ApiOperation(
+            value = "Retrieve list of salesman employees",
+            tags = HR_TEAM_TAG,
+            responseContainer = "List")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully retrieve all sales employees from the database"),
+            @ApiResponse(code = 200, message = "Successfully retrieve all sales employees from the database",
+                    response = SalesEmployee.class),
             @ApiResponse(code = 404, message = "Failed to retrieve all sales employees from the database"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")
     })
@@ -212,14 +260,20 @@ public class EmployeeController {
     @POST
     @Path(EMPLOYEES + SALESMAN + CREATE)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Creates new sales employee", tags = HR_TEAM_TAG)
+    @ApiOperation(
+            value = "Creates new sales employee",
+            tags = HR_TEAM_TAG)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully added new sales employee to the database"),
             @ApiResponse(code = 400, message = "Failed to add new sales employee to the database"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")
     })
     public Response createNewSalesman(
-            SalesEmployee salesEmployee,
+            @ApiParam(
+                    value = "Salesman data required for creating new salesman",
+                    type = MediaType.APPLICATION_JSON,
+                    required = true
+            ) SalesEmployee salesEmployee,
             @QueryParam("token") String token
     ) {
         try {
@@ -241,14 +295,22 @@ public class EmployeeController {
     @GET
     @Path(EMPLOYEES + SALESMAN + ID)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Retrieve salesman employee by the given ID number", tags = HR_TEAM_TAG)
+    @ApiOperation(
+            value = "Retrieve salesman employee by the given ID number",
+            tags = HR_TEAM_TAG)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully retrieved sales employee by the given ID number"),
+            @ApiResponse(code = 200, message = "Successfully retrieved sales employee by the given ID number",
+                    response = SalesEmployee.class),
             @ApiResponse(code = 404, message = "Failed to retrieve sales employee by the given ID number"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")
     })
     public Response salesmanById(
-            @PathParam("id") int id,
+            @ApiParam(
+                    value = "ID of salesman that you are looking for",
+                    type = MediaType.TEXT_PLAIN,
+                    example = "1",
+                    required = true
+            ) @PathParam("id") int id,
             @QueryParam("token") String token) {
         try {
             if (AuthSwitch.isTokenNeeded) {
@@ -278,7 +340,12 @@ public class EmployeeController {
             @ApiResponse(code = 500, message = "Failed to connect with the database")
     })
     public Response deleteSalesmanById(
-            @PathParam("id") int id,
+            @ApiParam(
+                    value = "ID of salesman that will be deleted",
+                    type = MediaType.TEXT_PLAIN,
+                    example = "1",
+                    required = true
+            ) @PathParam("id") int id,
             @QueryParam("token") String token) {
         try {
             if (AuthSwitch.isTokenNeeded) {
@@ -311,8 +378,17 @@ public class EmployeeController {
             @ApiResponse(code = 500, message = "Failed to connect with the database")
     })
     public Response updateSalesmanById(
-            @PathParam("id") int id,
-            SalesEmployee salesEmployee,
+            @ApiParam(
+                    value = "ID of salesman that will be updated",
+                    type = MediaType.TEXT_PLAIN,
+                    example = "1",
+                    required = true
+            ) @PathParam("id") int id,
+            @ApiParam(
+                    value = "Salesman data to be updated",
+                    type = MediaType.APPLICATION_JSON,
+                    required = true
+            ) SalesEmployee salesEmployee,
             @QueryParam("token") String token
     ) {
         try {
