@@ -12,7 +12,7 @@ module.exports = function (app: Application) {
 
     try {
       req.session.token = await authService.login(data);
-      res.redirect("/index");
+      res.redirect("/");
     } catch (error) {
       console.error(error);
       res.locals.errormessage = error.message;
