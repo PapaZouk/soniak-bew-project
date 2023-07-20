@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{{ deliveryEmployee.firstName }} {{ deliveryEmployee.lastName }}</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    </head>
+    <body>
+        <header class="bg-dark text-light">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1>Delivery Employee {{ deliveryEmployee.firstName }} {{ deliveryEmployee.lastName }}</h1>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <main class="container mt-4">
+            <section id="delivery-employees" class="mt-4">
+            {% if deliveryEmployee %}
+                <h2>Salary</h2>
+                {{ deliveryEmployee.salary }}
+
+                <h2>Bank Account</h2>
+                {{ deliveryEmployee.bankAccount }}
+
+                <h2>National Insurance Number</h2>
+                {{ deliveryEmployee.nationalInsuranceNumber }}
+
+            {% else %}
+                Could not find Delivery Employee.
+            {% endif %}
+            </section>
+        </main>
+    </body>
+</html>
