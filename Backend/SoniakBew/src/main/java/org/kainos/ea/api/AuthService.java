@@ -38,7 +38,7 @@ public class AuthService {
         return false;
     }
 
-    public boolean isUser(String token) throws TokenExpiredException, FailedToVerifyTokenException {
+    public boolean isManager(String token) throws TokenExpiredException, FailedToVerifyTokenException {
         try {
             int roleID = authDao.getRoleIDFromToken(token);
             if (roleID == 2) {
@@ -50,5 +50,32 @@ public class AuthService {
         }
         return false;
     }
+
+    public boolean isSales(String token) throws TokenExpiredException, FailedToVerifyTokenException {
+        try {
+            int roleID = authDao.getRoleIDFromToken(token);
+            if (roleID == 3) {
+
+                return true;
+            }
+        } catch (SQLException e) {
+            throw new FailedToVerifyTokenException();
+        }
+        return false;
+    }
+
+    public boolean isHr(String token) throws TokenExpiredException, FailedToVerifyTokenException {
+        try {
+            int roleID = authDao.getRoleIDFromToken(token);
+            if (roleID == 4) {
+
+                return true;
+            }
+        } catch (SQLException e) {
+            throw new FailedToVerifyTokenException();
+        }
+        return false;
+    }
+
 }
 
