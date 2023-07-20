@@ -19,7 +19,6 @@ import javax.ws.rs.core.Response;
 import java.sql.SQLException;
 
 
-
 @Api
 @Path("/")
 public class ClientController {
@@ -43,9 +42,10 @@ public class ClientController {
 
     public Response getAllClients(@QueryParam("token") String token) {
         try {
-
-            if (!authService.isSales(token) & !authService.isAdmin(token)) {
-                throw new FailedToVerifyTokenException();
+            if (AuthSwitch.isTokenNeeded) {
+                if (!authService.isSales(token) & !authService.isAdmin(token)) {
+                    throw new FailedToVerifyTokenException();
+                }
             }
             return Response.ok(clientService.getAllClients()).build();
         } catch (SQLException e) {
@@ -70,8 +70,10 @@ public class ClientController {
 
     public Response getClientWithMaxValue(@QueryParam("token") String token) {
         try {
-            if (!authService.isSales(token) & !authService.isAdmin(token)) {
-                throw new FailedToVerifyTokenException();
+            if (AuthSwitch.isTokenNeeded) {
+                if (!authService.isSales(token) & !authService.isAdmin(token)) {
+                    throw new FailedToVerifyTokenException();
+                }
             }
             return Response.ok(clientService.getClientWithMaxValue()).build();
         } catch (SQLException e) {

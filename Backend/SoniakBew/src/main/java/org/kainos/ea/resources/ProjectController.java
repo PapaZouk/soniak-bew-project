@@ -41,9 +41,10 @@ public class ProjectController {
     public Response getAllProject(@QueryParam("token") String token) {
 
         try {
-            if (!authService.isManager(token) & !authService.isAdmin(token)) {
-                throw new FailedToVerifyTokenException();
-            }
+            if (AuthSwitch.isTokenNeeded)
+                if (!authService.isManager(token) & !authService.isAdmin(token)) {
+                    throw new FailedToVerifyTokenException();
+                }
             return Response.ok(projectService.getAllProject()).build();
         } catch (TokenExpiredException | FailedToVerifyTokenException e) {
             System.err.println(e.getMessage());

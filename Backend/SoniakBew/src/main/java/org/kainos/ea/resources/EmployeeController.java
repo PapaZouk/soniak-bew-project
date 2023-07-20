@@ -44,8 +44,10 @@ public class EmployeeController {
     public Response getAllDeliveryEmployees(@QueryParam("token") String token) {
         try {
             if (AuthSwitch.isTokenNeeded) {
-                if (!authService.isHr(token) & !authService.isAdmin(token)) {
-                    throw new FailedToVerifyTokenException();
+                if (AuthSwitch.isTokenNeeded) {
+                    if (!authService.isHr(token) & !authService.isAdmin(token)) {
+                        throw new FailedToVerifyTokenException();
+                    }
                 }
             }
             return Response.ok(employeeService.getAllDeliveryEmployees()).build();
@@ -71,8 +73,10 @@ public class EmployeeController {
             DeliveryEmployee deliveryEmployee,
             @QueryParam("token") String token) {
         try {
-            if (!authService.isHr(token) & !authService.isAdmin(token)) {
-                throw new FailedToVerifyTokenException();
+            if (AuthSwitch.isTokenNeeded) {
+                if (!authService.isHr(token) & !authService.isAdmin(token)) {
+                    throw new FailedToVerifyTokenException();
+                }
             }
             return Response.ok(employeeService.createNewDeliverymanEmployee(deliveryEmployee)).build();
         } catch (FailedToCreateNewDeliverymanEmployeeException e) {
@@ -85,7 +89,7 @@ public class EmployeeController {
     }
 
     @GET
-    @Path(EMPLOYEES + DELIVERYMAN +ID)
+    @Path(EMPLOYEES + DELIVERYMAN + ID)
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Retrieve deliveryman employee by the given ID number", tags = HR_TEAM_TAG)
     @ApiResponses(value = {
@@ -98,8 +102,10 @@ public class EmployeeController {
             @QueryParam("token") String token
     ) {
         try {
-            if (!authService.isHr(token) & !authService.isAdmin(token)) {
-                throw new FailedToVerifyTokenException();
+            if (AuthSwitch.isTokenNeeded) {
+                if (!authService.isHr(token) & !authService.isAdmin(token)) {
+                    throw new FailedToVerifyTokenException();
+                }
             }
             return Response.ok(employeeService.getDeliverymanById(id)).build();
         } catch (SQLException | EmployeeDoesNotExistException e) {
@@ -126,8 +132,10 @@ public class EmployeeController {
             @QueryParam("token") String token
     ) {
         try {
-            if (!authService.isHr(token) & !authService.isAdmin(token)) {
-                throw new FailedToVerifyTokenException();
+            if (AuthSwitch.isTokenNeeded) {
+                if (!authService.isHr(token) & !authService.isAdmin(token)) {
+                    throw new FailedToVerifyTokenException();
+                }
             }
             employeeService.deleteDeliverymanById(id);
             return Response.ok().build();
@@ -158,8 +166,10 @@ public class EmployeeController {
             @QueryParam("token") String token
     ) {
         try {
-            if (!authService.isHr(token) & !authService.isAdmin(token)) {
-                throw new FailedToVerifyTokenException();
+            if (AuthSwitch.isTokenNeeded) {
+                if (!authService.isHr(token) & !authService.isAdmin(token)) {
+                    throw new FailedToVerifyTokenException();
+                }
             }
             employeeService.updateDeliverymanById(id, deliveryEmployee);
             return Response.ok().build();
@@ -186,8 +196,10 @@ public class EmployeeController {
     })
     public Response getAllSalesEmployees(@QueryParam("token") String token) {
         try {
-            if (!authService.isHr(token) & !authService.isAdmin(token)) {
-                throw new FailedToVerifyTokenException();
+            if (AuthSwitch.isTokenNeeded) {
+                if (!authService.isHr(token) & !authService.isAdmin(token)) {
+                    throw new FailedToVerifyTokenException();
+                }
             }
             return Response.ok(employeeService.getAllSalesEmployees()).build();
         } catch (FailedToGetAllSalesmanEmployeesException e) {
@@ -213,8 +225,10 @@ public class EmployeeController {
             @QueryParam("token") String token
     ) {
         try {
-            if (!authService.isHr(token) & !authService.isAdmin(token)) {
-                throw new FailedToVerifyTokenException();
+            if (AuthSwitch.isTokenNeeded) {
+                if (!authService.isHr(token) & !authService.isAdmin(token)) {
+                    throw new FailedToVerifyTokenException();
+                }
             }
             return Response.ok(employeeService.createNewSalesEmployee(salesEmployee)).build();
         } catch (FailedToCreateNewSalesEmployeeException e) {
@@ -227,7 +241,7 @@ public class EmployeeController {
     }
 
     @GET
-    @Path(EMPLOYEES + SALESMAN +ID)
+    @Path(EMPLOYEES + SALESMAN + ID)
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Retrieve salesman employee by the given ID number", tags = HR_TEAM_TAG)
     @ApiResponses(value = {
@@ -239,8 +253,10 @@ public class EmployeeController {
             @PathParam("id") int id,
             @QueryParam("token") String token) {
         try {
-            if (!authService.isHr(token) & !authService.isAdmin(token)) {
-                throw new FailedToVerifyTokenException();
+            if (AuthSwitch.isTokenNeeded) {
+                if (!authService.isHr(token) & !authService.isAdmin(token)) {
+                    throw new FailedToVerifyTokenException();
+                }
             }
             return Response.ok(employeeService.getSalesmanById(id)).build();
         } catch (EmployeeDoesNotExistException e) {
@@ -267,8 +283,10 @@ public class EmployeeController {
             @PathParam("id") int id,
             @QueryParam("token") String token) {
         try {
-            if (!authService.isHr(token) & !authService.isAdmin(token)) {
-                throw new FailedToVerifyTokenException();
+            if (AuthSwitch.isTokenNeeded) {
+                if (!authService.isHr(token) & !authService.isAdmin(token)) {
+                    throw new FailedToVerifyTokenException();
+                }
             }
             employeeService.deleteSalesmanById(id);
             return Response.ok().build();
@@ -300,8 +318,10 @@ public class EmployeeController {
             @QueryParam("token") String token
     ) {
         try {
-            if (!authService.isHr(token) & !authService.isAdmin(token)) {
-                throw new FailedToVerifyTokenException();
+            if (AuthSwitch.isTokenNeeded) {
+                if (!authService.isHr(token) & !authService.isAdmin(token)) {
+                    throw new FailedToVerifyTokenException();
+                }
             }
             employeeService.updateSalesmanById(id, salesEmployee);
             return Response.ok().build();
