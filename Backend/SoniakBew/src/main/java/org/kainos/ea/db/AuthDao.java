@@ -80,4 +80,28 @@ public class AuthDao extends DatabaseConnector {
         }
         return -1;
     }
+
+    public int getRoleIDFromToken(String token) throws SQLException, TokenExpiredException {
+        Connection conn = getConnection();
+
+        String query = "SELECT roleId, expiry FROM user " +
+                "JOIN token USING (username) " +
+                "WHERE token = ?";
+
+        PreparedStatement statement = conn.prepareStatement(query);
+        statement.setString(1, token);
+
+        ResultSet result = statement.executeQuery();
+
+        while (result.next()) {
+            Timestamp expiry = result.getTimestamp("expiry");
+
+            if (expiry.after(new Date())) {
+                return result.getInt("roleId");
+            } else {
+                throw new BatchUpdateException();
+            }
+        }
+        return -1;
+    }
 }
