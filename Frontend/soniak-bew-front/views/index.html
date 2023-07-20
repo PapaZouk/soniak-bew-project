@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>{{title}}</title>
+    <!-- <link rel="stylesheet" href="style.css" /> -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <header class="bg-dark text-light">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <h1>Main dashboard</h1>
+            <nav>
+              <ul class="nav">
+                <li class="nav-item">
+                  <a class="nav-link" href="#hr">HR</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#sales">Sales</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#managment">Management</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="container mt-4">
+      <section id="hr">
+        <h2>HR Team</h2>
+        <p>HR team dashboard</p>
+        <div class="list-group">
+          <a href="hr/list-delivery-employees" class="list-group-item"
+            >Show list of deliveryman employees</a
+          >
+          <a href="hr/view-delivery-employee" class="list-group-item"
+            >Show deliveryman employee by the given ID number</a
+          >
+          <a href="hr/update" class="list-group-item"
+            >Updates deliveryman with the given ID number</a
+          >
+          <a href="hr/add-delivery-employee" class="list-group-item"
+            >Add deliveryman with the given ID number</a
+          >
+          <a href="hr/remove-delivery-employee" class="list-group-item"
+            >Remove deliveryman with the given ID number</a
+          >
+          <a href="hr/list-sales-employee" class="list-group-item"
+            >Show list of salesman employees</a
+          >
+          <a href="hr/view-sales-employee" class="list-group-item"
+            >Show sales employee by the given ID number</a
+          >
+          <a href="hr/update-sales-employee" class="list-group-item"
+            >Updates sales with the given ID number</a
+          >
+          <a href="hr/add-sales-employee" class="list-group-item"
+            >Add sales with the given ID number</a
+          >
+          <a href="hr/remove-sales-employee" class="list-group-item"
+            >Remove sales with the given ID number</a
+          >
+        </div>
+      </section>
+      <section id="sales" class="mt-4">
+        <h2>Sales Team</h2>
+        <p>Sales team dashboard</p>
+        <div class="list-group">
+          <a href="sales/allClients" class="list-group-item"
+            >Show list of deliveryman employees</a
+          >
+          <a href="sales/maxValue" class="list-group-item"
+            >Show client with max project`s value</a
+          >
+        </div>
+      </section>
+      <section id="managment" class="my-4">
+        <h2>Managment Team</h2>
+        <p>Managment team dashboard</p>
+        <div class="list-group">
+          <a href="managment/allProducts" class="list-group-item"
+            >Show all projects</a
+          >
+          <a href="managment/view-project" class="list-group-item"
+            >Show project by Id</a
+          >
+          <a href="managment/update-product" class="list-group-item"
+            >Updates project status by the given ID number</a
+          >
+          <a href="managment/add-product" class="list-group-item"
+            >Create new project</a
+          >
+        </div>
+      </section>
+    </main>
+    <footer class="bg-dark text-light py-3 mt-6">
+      <div class="container text-center">
+        <p>&copy; Soniac Bew Company 2023</p>
+      </div>
+    </footer>
+    <script src="public/script.js"></script>
+  </body>
+</html>
