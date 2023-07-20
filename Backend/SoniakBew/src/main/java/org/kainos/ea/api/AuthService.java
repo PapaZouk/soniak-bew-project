@@ -1,5 +1,6 @@
 package org.kainos.ea.api;
 
+
 import org.kainos.ea.cli.Login;
 import org.kainos.ea.client.FailedToGenerateTokenException;
 import org.kainos.ea.client.FailedToLoginException;
@@ -78,4 +79,3 @@ public class AuthService {
     }
 
 }
-
