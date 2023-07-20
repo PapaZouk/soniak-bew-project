@@ -3,6 +3,7 @@ package org.kainos.ea.resources;
 import io.swagger.annotations.*;
 import org.kainos.ea.api.AuthService;
 import org.kainos.ea.cli.Login;
+import org.kainos.ea.cli.LoginNoRole;
 import org.kainos.ea.client.FailedToCheckIfUserIsRegisteredException;
 import org.kainos.ea.client.FailedToGenerateTokenException;
 import org.kainos.ea.client.FailedToLoginException;
@@ -36,7 +37,7 @@ public class AuthController {
             @ApiResponse(code = 400, message = "Failed to log in"),
             @ApiResponse(code = 500, message = "Failed to connect with the server")
     })
-    public Response login(Login login) {
+    public Response login(LoginNoRole login) {
         try {
             return Response.ok(authService.login(login)).build();
         } catch (FailedToLoginException | FailedToGenerateTokenException e) {

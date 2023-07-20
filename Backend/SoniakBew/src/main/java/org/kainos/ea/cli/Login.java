@@ -22,5 +22,6 @@ public class Login {
     ) {
         this.username = username;
         this.password = password;
+        this.roleId = roleId;
     }
 }

@@ -2,6 +2,7 @@ package org.kainos.ea.db;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.kainos.ea.cli.Login;
+import org.kainos.ea.cli.LoginNoRole;
 import org.kainos.ea.client.TokenExpiredException;
 
 import java.sql.*;
@@ -30,7 +31,7 @@ public class AuthDao extends DatabaseConnector {
         return token;
     }
 
-    public boolean validLogin(Login login) throws SQLException {
+    public boolean validLogin(LoginNoRole login) throws SQLException {
         Connection conn = getConnection();
 
         String query = "SELECT us.password FROM user AS us WHERE us.username = ?";

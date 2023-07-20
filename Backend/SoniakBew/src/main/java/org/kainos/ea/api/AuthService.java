@@ -2,6 +2,7 @@ package org.kainos.ea.api;
 
 
 import org.kainos.ea.cli.Login;
+import org.kainos.ea.cli.LoginNoRole;
 import org.kainos.ea.client.*;
 import org.kainos.ea.db.AuthDao;
 
@@ -10,7 +11,7 @@ import java.sql.SQLException;
 public class AuthService {
     private AuthDao authDao = new AuthDao();
 
-    public String login(Login login) throws FailedToLoginException, FailedToGenerateTokenException {
+    public String login(LoginNoRole login) throws FailedToLoginException, FailedToGenerateTokenException {
 
         try {
             if (authDao.validLogin(login)) {
