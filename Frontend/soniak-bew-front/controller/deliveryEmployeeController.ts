@@ -28,6 +28,16 @@ module.exports = function(app: Application) {
         res.render('hr/view-delivery-employee', {deliveryEmployee: data})
     })
 
+    app.post('/delete-delivery-employee/:id', async (req: Request, res: Response) => {
+        let data = []
+        try {
+            data = await deliveryEmployeeService.deleteDeliveryEmployee(req.params.id);
+        } catch (e) {
+            console.error(e);
+        }
+        res.render('hr/list-delivery-employees', {deliveryEmployee: data})
+    })
+
     app.get('/add-delivery-employee', async (req: Request, res: Response) => {
         res.render('hr/add-delivery-employee')
     })

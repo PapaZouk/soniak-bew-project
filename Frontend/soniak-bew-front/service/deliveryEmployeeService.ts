@@ -31,3 +31,13 @@ module.exports.createDeliveryEmployee = async function (deliveryEmployee: Delive
         throw new Error ('Could not create Delivery Employee')
     }
 }
+
+module.exports.deleteDeliveryEmployee = async function (id: number): Promise<DeliveryEmployee> {
+    try {
+        const response = await axios.delete('http://localhost:8080/employees/deliveryman/delete/' + id)
+
+        return response.data
+    } catch (e) {
+        throw new Error('Could not delete Delivery Employee')
+    }
+}
