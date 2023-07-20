@@ -2,6 +2,7 @@ package org.kainos.ea.db;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.kainos.ea.cli.Login;
+import org.kainos.ea.cli.LoginNoRole;
 import org.kainos.ea.client.TokenExpiredException;
 
 import java.sql.*;
@@ -30,7 +31,7 @@ public class AuthDao extends DatabaseConnector {
         return token;
     }
 
-    public boolean validLogin(Login login) throws SQLException {
+    public boolean validLogin(LoginNoRole login) throws SQLException {
         Connection conn = getConnection();
 
         String query = "SELECT us.password FROM user AS us WHERE us.username = ?";
@@ -68,11 +69,14 @@ public class AuthDao extends DatabaseConnector {
         Connection conn = getConnection();
 
         String insertStatement = "INSERT INTO user (username, password, roleId) " +
-                "VALUES (?, ?, 2)";
+                "VALUES (?, ?, ?)";
+
+        int roleId = login.getRoleId() == 0 ? 3 : login.getRoleId();
 
         PreparedStatement statement = conn.prepareStatement(insertStatement, Statement.RETURN_GENERATED_KEYS);
         statement.setString(1, login.getUsername());
         statement.setString(2, login.getPassword());
+        statement.setInt(3, roleId);
 
         statement.executeUpdate();
         ResultSet result = statement.getGeneratedKeys();

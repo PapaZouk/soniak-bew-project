@@ -3,8 +3,11 @@ package org.kainos.ea.resources;
 import io.swagger.annotations.*;
 import org.kainos.ea.api.AuthService;
 import org.kainos.ea.cli.Login;
+import org.kainos.ea.cli.LoginNoRole;
+import org.kainos.ea.client.FailedToCheckIfUserIsRegisteredException;
 import org.kainos.ea.client.FailedToGenerateTokenException;
 import org.kainos.ea.client.FailedToLoginException;
+import org.kainos.ea.client.FailedToRegisterNewUserException;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -34,7 +37,7 @@ public class AuthController {
             @ApiResponse(code = 400, message = "Failed to log in"),
             @ApiResponse(code = 500, message = "Failed to connect with the server")
     })
-    public Response login(Login login) {
+    public Response login(LoginNoRole login) {
         try {
             return Response.ok(authService.login(login)).build();
         } catch (FailedToLoginException | FailedToGenerateTokenException e) {
@@ -53,14 +56,16 @@ public class AuthController {
     })
     @ResponseHeader()
     public Response registerUser(Login login) {
-//        try {
-//            authService.registerUser(login);
-//            return Response.ok().build();
-//        } catch (FailedToRegisterUserException e) {
-//            System.err.println(e.getMessage());
-//
-//            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
-//        }
-        return null;
+        try {
+            authService.registerUser(login);
+            return Response.ok().build();
+        } catch (FailedToCheckIfUserIsRegisteredException e) {
+            System.err.println(e.getMessage());
+
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        } catch (FailedToRegisterNewUserException e) {
+            System.err.println(e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
     }
 }
