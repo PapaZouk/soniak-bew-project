@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Max Value</title>
+    <title>Projects</title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
@@ -15,27 +15,33 @@
       <div class="container">
         <div class="row">
           <div class="col-md-12">
-            <h1>Max value</h1>
+            <h1>Our Projects</h1>
           </div>
         </div>
       </div>
     </header>
     <main class="container mt-4">
-      <section id="product" class="my-4">
-        {% if maxValue %}
-        <div class="row justify-content-around">
-          <div class="">
-            <h3>Client's name:</h3>
-            <span class="h4">{{ maxValue.clientName }}</span>
-          </div>
-          <div class="">
-            <h3>Max value:</h3>
-            <span class="h4">{{ maxValue.total_project_value }}</span>
-          </div>
-        </div>
-        {% else %} Could not find max value {% endif %}
+      <section id="clients" class="mt-4">
+        {% if projects and projects.length > 0 %}
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Project Name</th>
+              <th scope="col">Tech lead</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for project in projects %}
+            <tr>
+              <td>{{project.name}}</td>
+              <td>{{project.tech_lead_id}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %} There are no projects. {% endif %}
       </section>
-      <div class="text-center py-6">
+      <div class="text-center py-4">
         <button type="button" onclick="history.back()" class="btn btn-primary">
           Back
         </button>
