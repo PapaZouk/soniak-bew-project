@@ -12,7 +12,9 @@ BEGIN
      );
 
      INSERT INTO role (roleId, Name) VALUES (1, 'Admin');
-     INSERT INTO role (roleId, Name) VALUES (2, 'User');
+     INSERT INTO role (roleId, Name) VALUES (2, 'Manager');
+     INSERT INTO role (roleId, Name) VALUES (3, 'Sales');
+     INSERT INTO role (roleId, Name) VALUES (4, 'HR');
 
      CREATE TABLE user
      (
@@ -24,7 +26,9 @@ BEGIN
      );
 
      INSERT INTO user (username, password, roleID) VALUES ('admin', 'admin', 1);
-     INSERT INTO user (username, password, roleID) VALUES ('user', 'user', 2);
+     INSERT INTO user (username, password, roleID) VALUES ('manager', 'manger', 2);
+     INSERT INTO user (username, password, roleID) VALUES ('sales', 'sales', 3);
+     INSERT INTO user (username, password, roleID) VALUES ('hr', 'hr', 4);
 
      CREATE TABLE token
      (
