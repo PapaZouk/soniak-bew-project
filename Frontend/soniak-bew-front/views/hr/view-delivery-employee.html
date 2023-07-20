@@ -27,6 +27,10 @@
                 <h2>National Insurance Number</h2>
                 {{ deliveryEmployee.nationalInsuranceNumber }}
 
+                <form action="/delete-delivery-employee/{{ deliveryEmployee.employeeId }}" method="POST">
+                    <input type="submit" value="Delete">
+                </form>
+
             {% else %}
                 Could not find Delivery Employee.
             {% endif %}
