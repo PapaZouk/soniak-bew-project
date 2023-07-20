@@ -45,4 +45,20 @@ public class AuthDao extends DatabaseConnector {
         return false;
     }
 
+    public boolean isUserRegistered(String username) throws SQLException {
+        Connection conn = getConnection();
+
+        String query = "SELECT username FROM user WHERE username = ?";
+
+        PreparedStatement statement = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        statement.setString(1, username);
+        statement.executeQuery();
+
+        ResultSet result = statement.getGeneratedKeys();
+
+        if (result.next()) {
+            return true;
+        }
+        return false;
+    }
 }
