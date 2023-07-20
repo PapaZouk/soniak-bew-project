@@ -61,4 +61,10 @@ public class AuthDao extends DatabaseConnector {
         }
         return false;
     }
+
+    public int registerUser(Login login) throws SQLException {
+        Connection conn = getConnection();
+
+        String inserStatement = "INSERT INTO user (username, password, roleId) " +
+                "VALUES (?, ?, 2)";    }
 }
