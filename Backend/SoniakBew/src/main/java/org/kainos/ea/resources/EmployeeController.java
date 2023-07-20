@@ -41,12 +41,18 @@ public class EmployeeController {
             @ApiResponse(code = 404, message = "Failed to retrieve all delivery employees from the database"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")
     })
-    public Response getAllDeliveryEmployees() {
+    public Response getAllDeliveryEmployees(@QueryParam("token") String token) {
         try {
+            if (!authService.isHr(token)) {
+                throw new FailedToVerifyTokenException();
+            }
             return Response.ok(employeeService.getAllDeliveryEmployees()).build();
         } catch (FailedToGetAllDeliverymanEmployeesException e) {
             System.err.println(e.getMessage());
             return Response.status(Response.Status.NOT_FOUND).build();
+        } catch (TokenExpiredException | FailedToVerifyTokenException e) {
+            System.err.println(e.getMessage());
+            return Response.status(Response.Status.FORBIDDEN).entity(e.getMessage()).build();
         }
     }
 
