@@ -1,7 +1,9 @@
 package org.kainos.ea.resources;
 
-import io.swagger.annotations.*;
-import io.swagger.models.auth.In;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.kainos.ea.api.AuthService;
 import org.kainos.ea.api.EmployeeService;
 import org.kainos.ea.cli.DeliveryEmployee;
@@ -12,7 +14,6 @@ import org.kainos.ea.client.FailedToCreateNewSalesEmployeeException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.math.BigDecimal;
 import java.sql.SQLException;
 
 @Api
@@ -43,8 +44,6 @@ public class EmployeeController {
     private static final String DELETE = "/delete";
 
     private final EmployeeService employeeService = new EmployeeService();
-    private final AuthService authService = new AuthService();
-
     @GET
     @Path(EMPLOYEES + DELIVERYMAN)
     @Produces(MediaType.APPLICATION_JSON)
@@ -55,6 +54,7 @@ public class EmployeeController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieve all delivery employees from the database",
                     response = DeliveryEmployee.class),
+            @ApiResponse(code = 403, message = "User has no authorities to access resources"),
             @ApiResponse(code = 404, message = "Failed to retrieve all delivery employees from the database"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")
     })
@@ -68,12 +68,14 @@ public class EmployeeController {
             return Response.ok(employeeService.getAllDeliveryEmployees()).build();
         } catch (FailedToGetAllDeliverymanEmployeesException e) {
             System.err.println(e.getMessage());
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
         } catch (TokenExpiredException | FailedToVerifyTokenException e) {
             System.err.println(e.getMessage());
             return Response.status(Response.Status.FORBIDDEN).entity(e.getMessage()).build();
         }
     }
+
+    private final AuthService authService = new AuthService();
 
     @POST
     @Path(EMPLOYEES + DELIVERYMAN + CREATE)
@@ -83,7 +85,7 @@ public class EmployeeController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully added new delivery employee to the database"),
             @ApiResponse(code = 400, message = "Failed to add new delivery employee to the database"),
-            @ApiResponse(code = 403, message = "Unauthorized access while creating new deliveryman"),
+            @ApiResponse(code = 403, message = "User has no authorities to access resources"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")
     })
     public Response createNewDeliveryman(
@@ -102,7 +104,7 @@ public class EmployeeController {
             return Response.ok(employeeService.createNewDeliverymanEmployee(deliveryEmployee)).build();
         } catch (FailedToCreateNewDeliverymanEmployeeException e) {
             System.err.println(e.getMessage());
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         } catch (TokenExpiredException | FailedToVerifyTokenException e) {
             System.err.println(e.getMessage());
             return Response.status(Response.Status.FORBIDDEN).entity(e.getMessage()).build();
@@ -125,6 +127,7 @@ public class EmployeeController {
     public Response deliverymanById(
             @ApiParam(
                     value = "ID of deliveryman that you are looking for",
+                    type = MediaType.TEXT_PLAIN,
                     required = true,
                     example = "1"
             ) @PathParam("id") int id,
@@ -139,8 +142,7 @@ public class EmployeeController {
             return Response.ok(employeeService.getDeliverymanById(id)).build();
         } catch (SQLException | EmployeeDoesNotExistException e) {
             System.err.println(e.getMessage());
-
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
         } catch (TokenExpiredException | FailedToVerifyTokenException e) {
             System.err.println(e.getMessage());
             return Response.status(Response.Status.FORBIDDEN).entity(e.getMessage()).build();
@@ -153,14 +155,16 @@ public class EmployeeController {
     @ApiOperation(value = "Deletes deliveryman employee by the given ID number", tags = HR_TEAM_TAG)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully deleted delivery employee by the given ID number"),
-            @ApiResponse(code = 404, message = "Failed to delete delivery employee by the given ID number"),
+            @ApiResponse(code = 403, message = "User has no authorities to access resources"),
+            @ApiResponse(code = 404, message = "Could not find delivery employee by the given ID number"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")
     })
     public Response deleteDeliverymanById(
             @ApiParam(
                     value = "ID of employee that will be deleted",
                     example = "1",
-                    type = MediaType.TEXT_PLAIN
+                    type = MediaType.TEXT_PLAIN,
+                    required = true
             ) @PathParam("id") int id,
             @QueryParam("token") String token
     ) {
@@ -174,13 +178,13 @@ public class EmployeeController {
             return Response.ok().build();
         } catch (DeliverymanDoesNotExistException e) {
             System.err.println(e.getMessage());
-            return Response.status(Response.Status.NOT_FOUND).build();
-        } catch (FailedToDeleteDeliverymanException e) {
-            System.err.println(e.getMessage());
-            return Response.serverError().build();
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
         } catch (TokenExpiredException | FailedToVerifyTokenException e) {
             System.err.println(e.getMessage());
             return Response.status(Response.Status.FORBIDDEN).entity(e.getMessage()).build();
+        } catch (FailedToDeleteDeliverymanException e) {
+            System.err.println(e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
 
@@ -190,7 +194,8 @@ public class EmployeeController {
     @ApiOperation(value = "Updates deliveryman with the given ID number", tags = HR_TEAM_TAG)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully updated delivery employee with the given ID number"),
-            @ApiResponse(code = 404, message = "Failed to update delivery employee with the given ID number"),
+            @ApiResponse(code = 403, message = "User has no authorities to access resources"),
+            @ApiResponse(code = 404, message = "Could not found delivery employee with the given ID number"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")
     })
     public Response updateDeliverymanById(
@@ -220,7 +225,7 @@ public class EmployeeController {
             return Response.status(Response.Status.NOT_FOUND).build();
         } catch (FailedToUpdateDeliverymanException e) {
             System.err.println(e.getMessage());
-            return Response.serverError().build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         } catch (TokenExpiredException | FailedToVerifyTokenException e) {
             System.err.println(e.getMessage());
             return Response.status(Response.Status.FORBIDDEN).entity(e.getMessage()).build();
@@ -237,6 +242,8 @@ public class EmployeeController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieve all sales employees from the database",
                     response = SalesEmployee.class),
+            @ApiResponse(code = 403, message = "User has no authorities to access resources"),
+            @ApiResponse(code = 404, message = "Could not retrieve sales employees from the database"),
             @ApiResponse(code = 404, message = "Failed to retrieve all sales employees from the database"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")
     })
@@ -266,6 +273,7 @@ public class EmployeeController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully added new sales employee to the database"),
             @ApiResponse(code = 400, message = "Failed to add new sales employee to the database"),
+            @ApiResponse(code = 403, message = "User has no authorities to access resources"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")
     })
     public Response createNewSalesman(
@@ -285,7 +293,7 @@ public class EmployeeController {
             return Response.ok(employeeService.createNewSalesEmployee(salesEmployee)).build();
         } catch (FailedToCreateNewSalesEmployeeException e) {
             System.err.println(e.getMessage());
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         } catch (TokenExpiredException | FailedToVerifyTokenException e) {
             System.err.println(e.getMessage());
             return Response.status(Response.Status.FORBIDDEN).entity(e.getMessage()).build();
@@ -302,6 +310,8 @@ public class EmployeeController {
             @ApiResponse(code = 200, message = "Successfully retrieved sales employee by the given ID number",
                     response = SalesEmployee.class),
             @ApiResponse(code = 404, message = "Failed to retrieve sales employee by the given ID number"),
+            @ApiResponse(code = 403, message = "User has no authorities to access resources"),
+            @ApiResponse(code = 404, message = "Could not find sales employee by the given ID number"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")
     })
     public Response salesmanById(
@@ -321,8 +331,7 @@ public class EmployeeController {
             return Response.ok(employeeService.getSalesmanById(id)).build();
         } catch (EmployeeDoesNotExistException e) {
             System.err.println(e.getMessage());
-
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
         } catch (TokenExpiredException | FailedToVerifyTokenException e) {
             System.err.println(e.getMessage());
             return Response.status(Response.Status.FORBIDDEN).entity(e.getMessage()).build();
@@ -336,7 +345,8 @@ public class EmployeeController {
     @ApiOperation(value = "Deletes salesman employee by the given ID number", tags = HR_TEAM_TAG)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully deleted salesman employee by the given ID number"),
-            @ApiResponse(code = 404, message = "Failed to delete salesman employee by the given ID number"),
+            @ApiResponse(code = 403, message = "User has no authorities to access resources"),
+            @ApiResponse(code = 404, message = "Could not find salesman employee by the given ID number"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")
     })
     public Response deleteSalesmanById(
@@ -357,13 +367,13 @@ public class EmployeeController {
             return Response.ok().build();
         } catch (SalesmanDoesNotExistException e) {
             System.err.println(e.getMessage());
-            return Response.status(Response.Status.NOT_FOUND).build();
-        } catch (FailedToDeleteSalesmanException e) {
-            System.err.println(e.getMessage());
-            return Response.serverError().build();
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
         } catch (TokenExpiredException | FailedToVerifyTokenException e) {
             System.err.println(e.getMessage());
             return Response.status(Response.Status.FORBIDDEN).entity(e.getMessage()).build();
+        } catch (FailedToDeleteSalesmanException e) {
+            System.err.println(e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
 
@@ -374,7 +384,8 @@ public class EmployeeController {
     @ApiOperation(value = "Updates deliveryman with the given ID number", tags = HR_TEAM_TAG)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully updated delivery employee with the given ID number"),
-            @ApiResponse(code = 404, message = "Failed to update delivery employee with the given ID number"),
+            @ApiResponse(code = 403, message = "User has no authorities to access resources"),
+            @ApiResponse(code = 404, message = "Could not find delivery employee with the given ID number"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")
     })
     public Response updateSalesmanById(
@@ -401,10 +412,10 @@ public class EmployeeController {
             return Response.ok().build();
         } catch (SalesmanDoesNotExistException e) {
             System.err.println(e.getMessage());
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
         } catch (FailedToUpdateSalesmanException e) {
             System.err.println(e.getMessage());
-            return Response.serverError().build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         } catch (TokenExpiredException | FailedToVerifyTokenException e) {
             System.err.println(e.getMessage());
             return Response.status(Response.Status.FORBIDDEN).entity(e.getMessage()).build();
