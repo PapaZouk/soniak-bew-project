@@ -7,10 +7,13 @@ import io.swagger.annotations.ApiResponses;
 import org.kainos.ea.api.AuthService;
 import org.kainos.ea.api.ClientService;
 import org.kainos.ea.cli.Client;
+import org.kainos.ea.client.FailedToVerifyTokenException;
+import org.kainos.ea.client.TokenExpiredException;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
@@ -38,12 +41,18 @@ public class ClientController {
             @ApiResponse(code = 404, message = "Failed to retrieve all clients from the database"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")})
 
-    public Response getAllClients() {
+    public Response getAllClients(@QueryParam("token") String token) {
         try {
+            if (!authService.isSales(token) & !authService.isAdmin(token)) {
+                throw new FailedToVerifyTokenException();
+            }
             return Response.ok(clientService.getAllClients()).build();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
             return Response.status(Response.Status.BAD_REQUEST).build();
+        } catch (TokenExpiredException | FailedToVerifyTokenException e) {
+            System.err.println(e.getMessage());
+            return Response.status(Response.Status.FORBIDDEN).entity(e.getMessage()).build();
         }
     }
 
@@ -58,12 +67,18 @@ public class ClientController {
             @ApiResponse(code = 404, message = "Failed to retrieve data from the database"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")})
 
-    public Response getClientWithMaxValue() {
+    public Response getClientWithMaxValue(@QueryParam("token") String token) {
         try {
+            if (!authService.isSales(token) & !authService.isAdmin(token)) {
+                throw new FailedToVerifyTokenException();
+            }
             return Response.ok(clientService.getClientWithMaxValue()).build();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
             return Response.status(Response.Status.BAD_REQUEST).build();
+        } catch (TokenExpiredException | FailedToVerifyTokenException e) {
+            System.err.println(e.getMessage());
+            return Response.status(Response.Status.FORBIDDEN).entity(e.getMessage()).build();
         }
 
     }
