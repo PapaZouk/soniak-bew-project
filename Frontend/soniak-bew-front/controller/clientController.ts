@@ -7,7 +7,7 @@ module.exports = function (app: Application) {
     let data: Client[];
 
     try {
-      data = await clientService.getClients();
+      data = await clientService.getClients(req.session.token);
     } catch (error) {
       console.log("Controller", error);
     }
@@ -18,7 +18,7 @@ module.exports = function (app: Application) {
     let data: MaxValue;
 
     try {
-      data = await clientService.getMaxValue();
+      data = await clientService.getMaxValue(req.session.token);
     } catch (error) {
       console.log("Controller Error", error);
     }

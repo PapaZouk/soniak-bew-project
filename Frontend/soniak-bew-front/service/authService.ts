@@ -3,7 +3,8 @@ import { Login, Register } from "../model/auth";
 
 async function login(login: Login): Promise<any> {
   try {
-    const response = await axios.post("http://localhost:8080/login", login);
+    login.roleId = 0;
+    const response = await axios.post("http://localhost:8080/api/login", login);
 
     return response.data;
   } catch (e) {
@@ -14,7 +15,7 @@ async function login(login: Login): Promise<any> {
 async function register(register: Register): Promise<number> {
   try {
     const response = await axios.post(
-      "http://localhost:8080/register/",
+      "http://localhost:8080/api/register",
       register
     );
     return response.data;

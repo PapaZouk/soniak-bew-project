@@ -1,12 +1,12 @@
 export class Client {
   id: number;
-  phoneNumber: string;
-  firstName: string;
-  lastName: string;
+  phone_number: string;
+  first_name: string;
+  last_name: string;
   address: string;
 }
 
 export class MaxValue {
-  clientName: string;
-  totalProjectValue: string;
+  ClientName: string;
+  total_project_value: string;
 }
