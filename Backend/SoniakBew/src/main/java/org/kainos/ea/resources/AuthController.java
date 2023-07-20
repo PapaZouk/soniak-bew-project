@@ -16,7 +16,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import static org.kainos.ea.resources.AuthController.*;
+import static org.kainos.ea.resources.AuthController.API;
 
 @Api
 @Path(API)
