@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.kainos.ea.api.AuthService;
 import org.kainos.ea.api.EmployeeService;
 import org.kainos.ea.cli.DeliveryEmployee;
 import org.kainos.ea.cli.SalesEmployee;
@@ -29,6 +30,7 @@ public class EmployeeController {
     private static final String DELETE = "/delete";
 
     private final EmployeeService employeeService = new EmployeeService();
+    private final AuthService authService = new AuthService();
 
     @GET
     @Path(EMPLOYEES + DELIVERYMAN)

@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.kainos.ea.api.AuthService;
 import org.kainos.ea.api.ProjectService;
 import org.kainos.ea.cli.Project;
 import org.kainos.ea.cli.ProjectRequest;
@@ -25,6 +26,8 @@ public class ProjectController {
     private static final String CREATE = "/create";
     private static final String UPDATE_STATUS = "/updatestatus";
     private static final String PROJECT_ID = "/{id}";
+
+    private final AuthService authService = new AuthService();
 
     @GET
     @Path(PROJECTS)

@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.kainos.ea.api.AuthService;
 import org.kainos.ea.api.ClientService;
 import org.kainos.ea.cli.Client;
 
@@ -24,7 +25,8 @@ public class ClientController {
     private static final String CLIENTS = "clients";
     private static final String MAX_VALUE = "/maxvalue";
 
-    private ClientService clientService = new ClientService();
+    private final ClientService clientService = new ClientService();
+    private final AuthService authService = new AuthService();
 
     @GET
     @Path(CLIENTS)
