@@ -43,7 +43,7 @@ public class EmployeeController {
     })
     public Response getAllDeliveryEmployees(@QueryParam("token") String token) {
         try {
-            if (!authService.isHr(token)) {
+            if (!authService.isHr(token) & !authService.isAdmin(token)) {
                 throw new FailedToVerifyTokenException();
             }
             return Response.ok(employeeService.getAllDeliveryEmployees()).build();
@@ -65,12 +65,20 @@ public class EmployeeController {
             @ApiResponse(code = 400, message = "Failed to add new delivery employee to the database"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")
     })
-    public Response createNewDeliveryman(DeliveryEmployee deliveryEmployee) {
+    public Response createNewDeliveryman(
+            DeliveryEmployee deliveryEmployee,
+            @QueryParam("token") String token) {
         try {
+            if (!authService.isHr(token) & !authService.isAdmin(token)) {
+                throw new FailedToVerifyTokenException();
+            }
             return Response.ok(employeeService.createNewDeliverymanEmployee(deliveryEmployee)).build();
         } catch (FailedToCreateNewDeliverymanEmployeeException e) {
             System.err.println(e.getMessage());
             return Response.status(Response.Status.BAD_REQUEST).build();
+        } catch (TokenExpiredException | FailedToVerifyTokenException e) {
+            System.err.println(e.getMessage());
+            return Response.status(Response.Status.FORBIDDEN).entity(e.getMessage()).build();
         }
     }
 
@@ -83,15 +91,25 @@ public class EmployeeController {
             @ApiResponse(code = 404, message = "Failed to retrieve delivery employee by the given ID number"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")
     })
-    public Response deliverymanById(@PathParam("id") int id) {
+    public Response deliverymanById(
+            @PathParam("id") int id,
+            @QueryParam("token") String token
+    ) {
         try {
+            if (!authService.isHr(token) & !authService.isAdmin(token)) {
+                throw new FailedToVerifyTokenException();
+            }
             return Response.ok(employeeService.getDeliverymanById(id)).build();
         } catch (SQLException | EmployeeDoesNotExistException e) {
             System.err.println(e.getMessage());
 
             return Response.status(Response.Status.NOT_FOUND).build();
+        } catch (TokenExpiredException | FailedToVerifyTokenException e) {
+            System.err.println(e.getMessage());
+            return Response.status(Response.Status.FORBIDDEN).entity(e.getMessage()).build();
         }
     }
+
     @DELETE
     @Path(EMPLOYEES + DELIVERYMAN + DELETE + ID)
     @Produces(MediaType.APPLICATION_JSON)
@@ -101,8 +119,14 @@ public class EmployeeController {
             @ApiResponse(code = 404, message = "Failed to delete delivery employee by the given ID number"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")
     })
-    public Response deleteDeliverymanById(@PathParam("id") int id) {
+    public Response deleteDeliverymanById(
+            @PathParam("id") int id,
+            @QueryParam("token") String token
+    ) {
         try {
+            if (!authService.isHr(token) & !authService.isAdmin(token)) {
+                throw new FailedToVerifyTokenException();
+            }
             employeeService.deleteDeliverymanById(id);
             return Response.ok().build();
         } catch (DeliverymanDoesNotExistException e) {
@@ -111,6 +135,9 @@ public class EmployeeController {
         } catch (FailedToDeleteDeliverymanException e) {
             System.err.println(e.getMessage());
             return Response.serverError().build();
+        } catch (TokenExpiredException | FailedToVerifyTokenException e) {
+            System.err.println(e.getMessage());
+            return Response.status(Response.Status.FORBIDDEN).entity(e.getMessage()).build();
         }
     }
 
@@ -123,8 +150,15 @@ public class EmployeeController {
             @ApiResponse(code = 404, message = "Failed to update delivery employee with the given ID number"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")
     })
-    public Response updateDeliverymanById(@PathParam("id") int id, DeliveryEmployee deliveryEmployee) {
+    public Response updateDeliverymanById(
+            @PathParam("id") int id,
+            DeliveryEmployee deliveryEmployee,
+            @QueryParam("token") String token
+    ) {
         try {
+            if (!authService.isHr(token) & !authService.isAdmin(token)) {
+                throw new FailedToVerifyTokenException();
+            }
             employeeService.updateDeliverymanById(id, deliveryEmployee);
             return Response.ok().build();
         } catch (DeliverymanDoesNotExistException e) {
@@ -133,6 +167,9 @@ public class EmployeeController {
         } catch (FailedToUpdateDeliverymanException e) {
             System.err.println(e.getMessage());
             return Response.serverError().build();
+        } catch (TokenExpiredException | FailedToVerifyTokenException e) {
+            System.err.println(e.getMessage());
+            return Response.status(Response.Status.FORBIDDEN).entity(e.getMessage()).build();
         }
     }
 
@@ -145,12 +182,18 @@ public class EmployeeController {
             @ApiResponse(code = 404, message = "Failed to retrieve all sales employees from the database"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")
     })
-    public Response getAllSalesEmployees() {
+    public Response getAllSalesEmployees(@QueryParam("token") String token) {
         try {
+            if (!authService.isHr(token) & !authService.isAdmin(token)) {
+                throw new FailedToVerifyTokenException();
+            }
             return Response.ok(employeeService.getAllSalesEmployees()).build();
         } catch (FailedToGetAllSalesmanEmployeesException e) {
             System.err.println(e.getMessage());
             return Response.status(Response.Status.NOT_FOUND).build();
+        } catch (TokenExpiredException | FailedToVerifyTokenException e) {
+            System.err.println(e.getMessage());
+            return Response.status(Response.Status.FORBIDDEN).entity(e.getMessage()).build();
         }
     }
 
@@ -163,12 +206,21 @@ public class EmployeeController {
             @ApiResponse(code = 400, message = "Failed to add new sales employee to the database"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")
     })
-    public Response createNewSalesman(SalesEmployee salesEmployee) {
+    public Response createNewSalesman(
+            SalesEmployee salesEmployee,
+            @QueryParam("token") String token
+    ) {
         try {
+            if (!authService.isHr(token) & !authService.isAdmin(token)) {
+                throw new FailedToVerifyTokenException();
+            }
             return Response.ok(employeeService.createNewSalesEmployee(salesEmployee)).build();
         } catch (FailedToCreateNewSalesEmployeeException e) {
             System.err.println(e.getMessage());
             return Response.status(Response.Status.BAD_REQUEST).build();
+        } catch (TokenExpiredException | FailedToVerifyTokenException e) {
+            System.err.println(e.getMessage());
+            return Response.status(Response.Status.FORBIDDEN).entity(e.getMessage()).build();
         }
     }
 
@@ -181,13 +233,21 @@ public class EmployeeController {
             @ApiResponse(code = 404, message = "Failed to retrieve sales employee by the given ID number"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")
     })
-    public Response salesmanById(@PathParam("id") int id) {
+    public Response salesmanById(
+            @PathParam("id") int id,
+            @QueryParam("token") String token) {
         try {
+            if (!authService.isHr(token) & !authService.isAdmin(token)) {
+                throw new FailedToVerifyTokenException();
+            }
             return Response.ok(employeeService.getSalesmanById(id)).build();
         } catch (EmployeeDoesNotExistException e) {
             System.err.println(e.getMessage());
 
             return Response.status(Response.Status.NOT_FOUND).build();
+        } catch (TokenExpiredException | FailedToVerifyTokenException e) {
+            System.err.println(e.getMessage());
+            return Response.status(Response.Status.FORBIDDEN).entity(e.getMessage()).build();
         }
     }
 
@@ -201,8 +261,13 @@ public class EmployeeController {
             @ApiResponse(code = 404, message = "Failed to delete salesman employee by the given ID number"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")
     })
-    public Response deleteSalesmanById(@PathParam("id") int id) {
+    public Response deleteSalesmanById(
+            @PathParam("id") int id,
+            @QueryParam("token") String token) {
         try {
+            if (!authService.isHr(token) & !authService.isAdmin(token)) {
+                throw new FailedToVerifyTokenException();
+            }
             employeeService.deleteSalesmanById(id);
             return Response.ok().build();
         } catch (SalesmanDoesNotExistException e) {
@@ -211,6 +276,9 @@ public class EmployeeController {
         } catch (FailedToDeleteSalesmanException e) {
             System.err.println(e.getMessage());
             return Response.serverError().build();
+        } catch (TokenExpiredException | FailedToVerifyTokenException e) {
+            System.err.println(e.getMessage());
+            return Response.status(Response.Status.FORBIDDEN).entity(e.getMessage()).build();
         }
     }
 
@@ -224,8 +292,15 @@ public class EmployeeController {
             @ApiResponse(code = 404, message = "Failed to update delivery employee with the given ID number"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")
     })
-    public Response updateSalesmanById(@PathParam("id") int id, SalesEmployee salesEmployee) {
+    public Response updateSalesmanById(
+            @PathParam("id") int id,
+            SalesEmployee salesEmployee,
+            @QueryParam("token") String token
+    ) {
         try {
+            if (!authService.isHr(token) & !authService.isAdmin(token)) {
+                throw new FailedToVerifyTokenException();
+            }
             employeeService.updateSalesmanById(id, salesEmployee);
             return Response.ok().build();
         } catch (SalesmanDoesNotExistException e) {
@@ -234,6 +309,9 @@ public class EmployeeController {
         } catch (FailedToUpdateSalesmanException e) {
             System.err.println(e.getMessage());
             return Response.serverError().build();
+        } catch (TokenExpiredException | FailedToVerifyTokenException e) {
+            System.err.println(e.getMessage());
+            return Response.status(Response.Status.FORBIDDEN).entity(e.getMessage()).build();
         }
     }
 }
