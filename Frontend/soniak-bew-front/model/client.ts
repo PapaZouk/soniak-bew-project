@@ -7,6 +7,6 @@ export class Client {
 }
 
 export class MaxValue {
-  ClientName: string;
+  clientName: string;
   total_project_value: string;
 }
