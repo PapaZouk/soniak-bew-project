@@ -26,7 +26,7 @@ BEGIN
      );
 
      INSERT INTO user (username, password, roleID) VALUES ('admin', 'admin', 1);
-     INSERT INTO user (username, password, roleID) VALUES ('manager', 'manger', 2);
+     INSERT INTO user (username, password, roleID) VALUES ('manager', 'manager', 2);
      INSERT INTO user (username, password, roleID) VALUES ('sales', 'sales', 3);
      INSERT INTO user (username, password, roleID) VALUES ('hr', 'hr', 4);
 
