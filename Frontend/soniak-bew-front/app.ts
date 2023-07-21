@@ -59,3 +59,4 @@ app.use(authMiddleware);
 require("./controller/clientController")(app);
 require("./controller/projectController")(app);
 require("./controller/deliveryEmployeeController")(app);
+require("./controller/saleEmployeeController")(app);
