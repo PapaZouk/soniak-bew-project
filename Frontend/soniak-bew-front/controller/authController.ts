@@ -4,7 +4,7 @@ import * as authService from "../service/authService";
 
 module.exports = function (app: Application) {
   app.get("/login", async (req: Request, res: Response) => {
-    res.render("login");
+    res.render("auth/login");
   });
 
   app.post("/login", async (req: Request, res: Response) => {

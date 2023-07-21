@@ -24,40 +24,42 @@ public class ProjectDao extends DatabaseConnector {
         statement.executeUpdate();
     }
 
-    public List<Project> getAllProject(){
-        try(Connection c = getConnection()){
-            Statement st = c.createStatement();
+    public List<Project> getAllProject() throws SQLException {
+        Connection c = getConnection();
+        Statement st = c.createStatement();
 
-            ResultSet rs = st.executeQuery("Select * FROM project;");
-            List<Project> projectList = new ArrayList<>();
+        String query = "SELECT pr.id, pr.tech_lead_id, CONCAT(e.first_name, ' ', e.last_name) AS `employee`, " +
+                "pr.client_id, pr.name, pr.value, pr.status, pr.start_date, pr.complete_date " +
+                "FROM project AS pr " +
+                "     LEFT JOIN employee AS e ON e.id = pr.tech_lead_id;";
 
-            while (rs.next()){
-                Project project = new Project(
-                        rs.getInt("id"),
-                        rs.getInt("tech_lead_id"),
-                        rs.getInt("client_id"),
-                        rs.getString("name"),
-                        rs.getFloat("value"),
-                        rs.getString("status"),
-                        rs.getDate("start_date"),
-                        rs.getDate("complete_date")
-                );
-                projectList.add(project);
-            }
-            return projectList;
-        }catch (SQLException e){
-            System.err.println(e.getMessage());
+        ResultSet rs = st.executeQuery(query);
+        List<Project> projectList = new ArrayList<>();
+
+        while (rs.next()) {
+            Project project = Project.builder()
+                    .id(rs.getInt("id"))
+                    .tech_lead_id(rs.getInt("tech_lead_id"))
+                    .techLeadName(rs.getString("employee"))
+                    .client_id(rs.getInt("client_id"))
+                    .name(rs.getString("name"))
+                    .value(rs.getFloat("value"))
+                    .status(rs.getString("status"))
+                    .start_date(rs.getDate("start_date"))
+                    .complete_date(rs.getDate("complete_date"))
+                    .build();
+            projectList.add(project);
         }
-        return null;
+        return projectList;
     }
 
     public Project getProjectById(int id) throws SQLException {
-            Connection conn = getConnection();
+        Connection conn = getConnection();
 
-            String query = "SELECT pr.id, pr.tech_lead_id, pr.client_id, pr.name, " +
-                    "pr.value, pr.status, pr.start_date, pr.complete_date " +
-                    "FROM project as pr " +
-                    "WHERE pr.id = ?;";
+        String query = "SELECT pr.id, pr.tech_lead_id, pr.client_id, pr.name, " +
+                "pr.value, pr.status, pr.start_date, pr.complete_date " +
+                "FROM project as pr " +
+                "WHERE pr.id = ?;";
 
         PreparedStatement statement = conn.prepareStatement(query);
         statement.setInt(1, id);
@@ -68,6 +70,7 @@ public class ProjectDao extends DatabaseConnector {
             return new Project(
                     result.getInt("id"),
                     result.getInt("tech_lead_id"),
+                    result.getString(""),
                     result.getInt("client_id"),
                     result.getString("name"),
                     result.getInt("value"),
@@ -112,6 +115,12 @@ public class ProjectDao extends DatabaseConnector {
         PreparedStatement statement = conn.prepareStatement(query);
         statement.setInt(1, id);
         statement.execute();
+    }
+
+    public void setDeliverymanToProjectWithId(int projectId, int deliverymanId) throws SQLException {
+        Connection conn = getConnection();
+
+        String query = "";
     }
 
 }
