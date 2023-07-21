@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Client, MaxValue } from "./model/client";
+import { Client, MaxValue, ClientToProject } from "./model/client";
 import { Project } from "./model/project";
 
 const express = require("express");
@@ -35,6 +35,7 @@ declare module "express-session" {
     client: Client;
     project: Project;
     maxValue: MaxValue;
+    clientToProject: ClientToProject;
   }
 }
 
