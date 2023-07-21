@@ -43,11 +43,12 @@ module.exports.deleteDeliveryEmployee = async function (id: number): Promise<Del
 }
 
 module.exports.updateDeliveryEmployee = async function (id: number, deliveryEmployee: DeliveryEmployee): Promise<DeliveryEmployee> {
+    console.log(id, deliveryEmployee);
     try {
-        const response = await axios.update('http://localhost:8080/employees/deliveryman/' +  id  + '/update', deliveryEmployee)
+        const response = await axios.patch('http://localhost:8080/employees/deliveryman/' +  id  + '/update', deliveryEmployee)
 
         return response.data
     } catch (e) {
-        throw new Error('Could not update Delivery Employee')
+        throw new Error(`Could not update Delivery Employee${e}`);
     }
 }

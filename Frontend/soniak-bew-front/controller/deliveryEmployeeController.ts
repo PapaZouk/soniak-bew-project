@@ -35,21 +35,32 @@ module.exports = function(app: Application) {
         } catch (e) {
             console.error(e);
         }
-        res.render('hr/list-delivery-employees', {deliveryEmployee: data})
+        //res.render('hr/list-delivery-employees', {deliveryEmployee: data})
+        res.redirect('/delivery-employees')
     })
 
     app.get('/update-delivery-employee/:id', async (req: Request, res: Response) => {
-
-    })
-    
-    app.post('/update-delivery-employee/:id', async (req: Request, res: Response) => {
         let data = []
+
         try {
-            data = await deliveryEmployeeService.updateDeliveryEmployee(req.params.id);
+            data = await deliveryEmployeeService.getDeliveryEmployeeById(req.params.id);
         } catch (e) {
             console.error(e);
         }
-        res.render('hr/view-delivery-employee', {deliveryEmployee: data})
+
+        res.render('hr/update-delivery-employee', {deliveryEmployee: data})
+    })
+    
+    app.post('/update-delivery-employee/:id', async (req: Request, res: Response) => {
+        let data: DeliveryEmployee = req.body
+
+        try {
+            data = await deliveryEmployeeService.updateDeliveryEmployee(req.params.id, data);
+        } catch (e) {
+            console.error(e);
+        }
+        //res.render('hr/view-delivery-employee', {deliveryEmployee: data})
+        res.redirect('/delivery-employees')
     })
 
     app.get('/add-delivery-employee', async (req: Request, res: Response) => {
