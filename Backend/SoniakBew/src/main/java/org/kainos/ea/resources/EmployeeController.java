@@ -1,15 +1,11 @@
 package org.kainos.ea.resources;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import org.kainos.ea.api.AuthService;
 import org.kainos.ea.api.EmployeeService;
 import org.kainos.ea.cli.DeliveryEmployee;
 import org.kainos.ea.cli.SalesEmployee;
 import org.kainos.ea.client.*;
-import org.kainos.ea.client.FailedToCreateNewSalesEmployeeException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -127,7 +123,6 @@ public class EmployeeController {
     public Response deliverymanById(
             @ApiParam(
                     value = "ID of deliveryman that you are looking for",
-                    type = MediaType.TEXT_PLAIN,
                     required = true,
                     example = "1"
             ) @PathParam("id") int id,
@@ -163,7 +158,6 @@ public class EmployeeController {
             @ApiParam(
                     value = "ID of employee that will be deleted",
                     example = "1",
-                    type = MediaType.TEXT_PLAIN,
                     required = true
             ) @PathParam("id") int id,
             @QueryParam("token") String token
@@ -202,7 +196,6 @@ public class EmployeeController {
             @ApiParam(
                     value = "ID of employee that will be updated",
                     example = "1",
-                    type = MediaType.TEXT_PLAIN,
                     required = true
             ) @PathParam("id") int id,
             @ApiParam(
@@ -317,7 +310,6 @@ public class EmployeeController {
     public Response salesmanById(
             @ApiParam(
                     value = "ID of salesman that you are looking for",
-                    type = MediaType.TEXT_PLAIN,
                     example = "1",
                     required = true
             ) @PathParam("id") int id,
@@ -352,7 +344,6 @@ public class EmployeeController {
     public Response deleteSalesmanById(
             @ApiParam(
                     value = "ID of salesman that will be deleted",
-                    type = MediaType.TEXT_PLAIN,
                     example = "1",
                     required = true
             ) @PathParam("id") int id,
@@ -391,7 +382,6 @@ public class EmployeeController {
     public Response updateSalesmanById(
             @ApiParam(
                     value = "ID of salesman that will be updated",
-                    type = MediaType.TEXT_PLAIN,
                     example = "1",
                     required = true
             ) @PathParam("id") int id,

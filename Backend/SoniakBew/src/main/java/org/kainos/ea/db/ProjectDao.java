@@ -10,9 +10,22 @@ import java.util.List;
 
 public class ProjectDao extends DatabaseConnector {
 
-    private DatabaseConnector databaseConnector = new DatabaseConnector();
+    public void addClientToTheProjectWithID(int projectId, int clientId) throws SQLException {
+        Connection conn = getConnection();
+
+        String query = "UPDATE project AS p " +
+                "   SET p.client_id = ? " +
+                "   WHERE p.id = ?";
+
+        PreparedStatement statement = conn.prepareStatement(query);
+        statement.setInt(1, clientId);
+        statement.setInt(2, projectId);
+
+        statement.executeUpdate();
+    }
+
     public List<Project> getAllProject(){
-        try(Connection c = databaseConnector.getConnection()){
+        try(Connection c = getConnection()){
             Statement st = c.createStatement();
 
             ResultSet rs = st.executeQuery("Select * FROM project;");

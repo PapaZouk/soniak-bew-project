@@ -1,17 +1,14 @@
 package org.kainos.ea.resources;
 
 import io.swagger.annotations.*;
-import org.checkerframework.checker.units.qual.A;
 import org.kainos.ea.api.AuthService;
 import org.kainos.ea.api.ProjectService;
-import org.kainos.ea.cli.Project;
 import org.kainos.ea.cli.ProjectRequest;
 import org.kainos.ea.client.*;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.List;
 
 @Api
 @Path("/")
@@ -34,10 +31,58 @@ public class ProjectController {
     private static final String MANAGEMENT_TAG = "Management Team";
     private static final String PROJECTS = "projects";
     private static final String CREATE = "/create";
+    private static final String ADD_CLIENT = "/client";
     private static final String UPDATE_STATUS = "/updatestatus";
-    private static final String PROJECT_ID = "/{id}";
+    private static final String ID = "/{id}";
+    private static final String CLIENT_ID = "/{clientId}";
+
 
     private final AuthService authService = new AuthService();
+
+    @PATCH
+    @Path(PROJECTS + ID + ADD_CLIENT + CLIENT_ID)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @ApiOperation(
+            value = "Add to the project new client",
+            tags = MANAGEMENT_TAG
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully added client to the project"),
+            @ApiResponse(code = 400, message = "Failed to add client to the project"),
+            @ApiResponse(code = 500, message = "Failed to connect with the database")
+    })
+    public Response addClientToProject(
+            @ApiParam(
+                    value = "ID of the project that will be updated",
+                    required = true,
+                    example = "1"
+            ) @PathParam(value = "id") int id,
+            @ApiParam(
+                    value = "ID of the client that will be added to the project",
+                    required = true,
+                    example = "2"
+            )
+            @PathParam(value = "clientId") int clientId,
+            @QueryParam("token") String token
+    ) {
+        try {
+            if (AuthSwitch.isTokenNeeded) {
+                if (!authService.isManager(token) & !authService.isAdmin(token)) {
+                    throw new FailedToVerifyTokenException();
+                }
+            }
+            projectService.addClientToTheProjectWithID(id, clientId);
+            return Response.ok().build();
+        } catch (ProjectDoesNotExistException e) {
+            System.err.println(e);
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        } catch (TokenExpiredException | FailedToVerifyTokenException e) {
+            System.err.println(e.getMessage());
+            return Response.status(Response.Status.FORBIDDEN).entity(e.getMessage()).build();
+        } catch (FailedToAddClientToTheProjectException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
 
     @GET
     @Path(PROJECTS)
@@ -68,7 +113,7 @@ public class ProjectController {
 
 
     @GET
-    @Path(PROJECTS + PROJECT_ID)
+    @Path(PROJECTS + ID)
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Retrieve project by the given ID number", tags = MANAGEMENT_TAG)
     @ApiResponses(value = {
@@ -79,7 +124,6 @@ public class ProjectController {
     public Response getProjectById(
             @ApiParam(
                     value = "ID of the project that you are looking for",
-                    type = MediaType.TEXT_PLAIN,
                     example = "1",
                     required = true
             ) @PathParam("id") int id,
@@ -101,13 +145,12 @@ public class ProjectController {
     }
 
     @PATCH
-    @Path(PROJECTS + PROJECT_ID + UPDATE_STATUS)
+    @Path(PROJECTS + ID + UPDATE_STATUS)
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Updates project status by the given ID number", tags = MANAGEMENT_TAG)
     public Response updateProjectStatusAsCompleted(
             @ApiParam(
                     value = "ID of the project that will be updated",
-                    type = MediaType.TEXT_PLAIN,
                     example = "1",
                     required = true
             ) @PathParam("id") int id,
