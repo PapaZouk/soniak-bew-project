@@ -68,7 +68,7 @@ public class ProjectController {
     ) {
         try {
             if (AuthSwitch.isTokenNeeded) {
-                if (!authService.isManager(token) & !authService.isAdmin(token)) {
+                if (!authService.isSales(token) & !authService.isAdmin(token)) {
                     throw new FailedToVerifyTokenException();
                 }
             }
