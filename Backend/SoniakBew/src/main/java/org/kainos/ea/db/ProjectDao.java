@@ -56,10 +56,11 @@ public class ProjectDao extends DatabaseConnector {
     public Project getProjectById(int id) throws SQLException {
         Connection conn = getConnection();
 
-        String query = "SELECT pr.id, pr.tech_lead_id, pr.client_id, pr.name, " +
-                "pr.value, pr.status, pr.start_date, pr.complete_date " +
-                "FROM project as pr " +
-                "WHERE pr.id = ?;";
+        String query = "SELECT pr.id, pr.tech_lead_id, CONCAT(e.first_name, ' ', e.last_name) as 'employee', " +
+                " pr.client_id, pr.name, pr.value, pr.status, pr.start_date, pr.complete_date " +
+                "FROM project AS pr " +
+                "LEFT JOIN employee AS e ON e.id = pr.tech_lead_id " +
+                "WHERE pr.id = ?";
 
         PreparedStatement statement = conn.prepareStatement(query);
         statement.setInt(1, id);
@@ -70,7 +71,7 @@ public class ProjectDao extends DatabaseConnector {
             return new Project(
                     result.getInt("id"),
                     result.getInt("tech_lead_id"),
-                    result.getString(""),
+                    result.getString("employee"),
                     result.getInt("client_id"),
                     result.getString("name"),
                     result.getInt("value"),
