@@ -30,12 +30,14 @@ async function addClientToProject(
   token: string
 ): Promise<number> {
   try {
-    const { projectId, clientId } = clientToProject;
-    const response = await axios.post(
-      `http://localhost:8080/projects/${projectId}/client/${clientId}`,
+    const id = clientToProject.projectId;
+    const clientId = clientToProject.clientId;
+
+    const response = await axios.patch(
+      `http://localhost:8080/projects/${id}/client/${clientId}`,
       {
         params: {
-          id: projectId,
+          id,
           clientId,
           token,
         },
