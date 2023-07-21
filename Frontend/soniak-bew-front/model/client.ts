@@ -10,3 +10,8 @@ export class MaxValue {
   clientName: string;
   total_project_value: string;
 }
+
+export class ClientToProject {
+  projectId?: number;
+  clientId?: number;
+}
