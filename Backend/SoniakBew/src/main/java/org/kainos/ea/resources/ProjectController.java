@@ -33,6 +33,7 @@ public class ProjectController {
     private static final String CREATE = "/create";
     private static final String ADD_CLIENT = "/client";
     private static final String UPDATE_STATUS = "/updatestatus";
+    private static final String SALESMAN = "/salesman";
     private static final String ID = "/{id}";
     private static final String CLIENT_ID = "/{clientId}";
 
@@ -44,7 +45,7 @@ public class ProjectController {
     @Consumes(MediaType.APPLICATION_JSON)
     @ApiOperation(
             value = "Add to the project new client",
-            tags = MANAGEMENT_TAG
+            tags = ClientController.CLIENTS_TAG
     )
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully added client to the project"),
@@ -94,6 +95,7 @@ public class ProjectController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieve all projects from " +
                     "the database", response = ProjectRequest.class),
+            @ApiResponse(code = 403, message = "User has no authorities to access resources"),
             @ApiResponse(code = 404, message = "Failed to retrieve all projects from the database"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")})
 
@@ -108,6 +110,9 @@ public class ProjectController {
         } catch (TokenExpiredException | FailedToVerifyTokenException e) {
             System.err.println(e.getMessage());
             return Response.status(Response.Status.FORBIDDEN).entity(e.getMessage()).build();
+        } catch (FailedToGetProjectsException e) {
+            System.err.println(e.getMessage());;
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
         }
     }
 
@@ -119,6 +124,7 @@ public class ProjectController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieve project by ID from " +
                     "the database", response = ProjectRequest.class),
+            @ApiResponse(code = 403, message = "User has no authorities to access resources"),
             @ApiResponse(code = 404, message = "Failed to retrieve project from the database"),
             @ApiResponse(code = 500, message = "Failed to connect with the database")})
     public Response getProjectById(

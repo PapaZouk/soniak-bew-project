@@ -2,10 +2,7 @@ package org.kainos.ea.api;
 
 import org.kainos.ea.cli.Project;
 import org.kainos.ea.cli.ProjectRequest;
-import org.kainos.ea.client.FailedToAddClientToTheProjectException;
-import org.kainos.ea.client.FailedToCreateNewProjectException;
-import org.kainos.ea.client.FailedToUpdateProjectStatusException;
-import org.kainos.ea.client.ProjectDoesNotExistException;
+import org.kainos.ea.client.*;
 import org.kainos.ea.db.ProjectDao;
 
 import java.sql.SQLException;
@@ -30,10 +27,13 @@ public class ProjectService {
         }
     }
 
-    public List<Project> getAllProject(){
-
-        List<Project> projectList =  projectDao.getAllProject();
-        return projectList;
+    public List<Project> getAllProject() throws FailedToGetProjectsException {
+        try {
+            return projectDao.getAllProject();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            throw new FailedToGetProjectsException();
+        }
     }
 
     public Project getProjectById(int id) throws ProjectDoesNotExistException {

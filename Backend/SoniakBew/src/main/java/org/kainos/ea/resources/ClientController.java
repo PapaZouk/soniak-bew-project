@@ -35,7 +35,7 @@ import java.sql.SQLException;
                         "token to access available endpoint."))
 public class ClientController {
 
-    private static final String CLIENTS_TAG = "Sales Team";
+    public static final String CLIENTS_TAG = "Sales Team";
     private static final String CLIENTS = "clients";
     private static final String MAX_VALUE = "/maxvalue";
 
