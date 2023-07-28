@@ -5,12 +5,12 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.federecio.dropwizard.swagger.SwaggerBundle;
 import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
-import org.kainos.ea.resources.AuthController;
-import org.kainos.ea.resources.ClientController;
-import org.kainos.ea.resources.EmployeeController;
-import org.kainos.ea.resources.ProjectController;
+import org.kainos.ea.resources.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SoniakBewAppApplication extends Application<SoniakBewAppConfiguration> {
+
 
     public static void main(final String[] args) throws Exception {
         new SoniakBewAppApplication().run(args);
@@ -41,6 +41,7 @@ public class SoniakBewAppApplication extends Application<SoniakBewAppConfigurati
         environment.jersey().register(new EmployeeController());
         environment.jersey().register(new ProjectController());
         environment.jersey().register(new AuthController());
+        environment.jersey().register(new EncryptionController());
 
     }
 

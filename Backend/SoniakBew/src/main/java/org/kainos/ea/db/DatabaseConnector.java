@@ -21,10 +21,10 @@ public class DatabaseConnector {
 
             Properties props = new Properties();
             props.load(propsStream);
-            user = props.getProperty("user");
-            password = props.getProperty("password");
-            host = props.getProperty("host");
-            name = props.getProperty("name");
+            user = props.getProperty("DB_USERNAME");
+            password = props.getProperty("DB_PASSWORD");
+            host = props.getProperty("DB_HOST");
+            name = props.getProperty("DB_NAME");
 
             if (user == null || password == null || host == null) {
                 throw new IllegalAccessException(
